@@ -14,7 +14,7 @@ import javax.net.ssl.X509TrustManager;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class Config extends ElasticsearchConfiguration {
 
   @Value("${elastic.host}")

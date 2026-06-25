@@ -5,16 +5,25 @@
 version: "3.7"
 services:
   app:
-    image: mcr.microsoft.com/devcontainers/java:1-21-bookworm
-    user: vscode
+    image: species-lists:local
+    build:
+      dockerfile: ./src/main/docker/lambda.Dockerfile
+      context: .
+    user: "1000"
     volumes:
-      - .:/workspace:cached
-    command: sleep infinity
+      - ./config:/config
+      - ./data:/data
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      SPRING_CONFIG_ADDITIONAL-LOCATION: file:/config/lists-service-config.properties
+      SPRING_AOT_ENABLED: true
     depends_on:
       - mongodb
       - elasticsearch
     ports:
       - "8080:8080"
+
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.26-arm64
     container_name: species-lists-elastic
@@ -34,7 +43,7 @@ services:
     cap_add:
       - IPC_LOCK
     volumes:
-      - ${HOME}/dev/species-lists/elastic:/usr/share/elasticsearch/data
+      - elasticsearch:/usr/share/elasticsearch/data
     restart: on-failure
     ports:
       - "9200:9200"
@@ -45,14 +54,22 @@ services:
       timeout: 10s
       retries: 5
   mongodb:
-    image: mongo:8.0
+    image: mongo:8
     container_name: species-lists-mongo
     restart: on-failure
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: my-super-secret-pw
     ports:
       - "27017:27017"
     volumes:
-      - ${HOME}/dev/species-lists/mongo/db:/data/db
+      - mongo:/data/db
+  mock-oauth2-server:
+    image: ghcr.io/navikt/mock-oauth2-server:2.1.5
+    ports:
+      - "9999:9999"
+    environment:
+      SERVER_PORT: 9999
 volumes:
-  mongodb_data_container:
-  elasticsearch-data:
-    driver: local
+  mongo:
+  elasticsearch:

@@ -23,8 +23,9 @@ import io.swagger.v3.oas.models.tags.Tag;
 
 /**
  * OpenAPI configuration for the Lists API.
+ * This class is excluded from compilation in the native profile (see pom.xml).
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class OpenApiConfig {
     @Autowired
     private MessageSource messageSource;

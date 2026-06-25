@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.aot.hint.annotation.RegisterReflectionForBinding;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import au.org.ala.listsapi.model.InputSpeciesList;
 import jakarta.annotation.PostConstruct;
 
 @Service
+@RegisterReflectionForBinding(ConstraintListItem.class)
 public class ValidationService {
 
   public static final Logger log = LoggerFactory.getLogger(ValidationService.class);

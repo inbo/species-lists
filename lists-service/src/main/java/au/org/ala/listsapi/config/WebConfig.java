@@ -22,7 +22,7 @@ import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.util.UrlPathHelper;
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {
     /**
