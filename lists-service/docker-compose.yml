@@ -18,6 +18,7 @@ services:
     environment:
       SPRING_CONFIG_ADDITIONAL-LOCATION: file:/config/lists-service-config.properties
       SPRING_AOT_ENABLED: true
+      SPRING_APPLICATION_JSON: '{"management.endpoints.enabled-by-default":"false"}'
     depends_on:
       - mongodb
       - elasticsearch
