@@ -31,6 +31,10 @@ FROM public.ecr.aws/lambda/provided:al2023
 # Runs as a Lambda extension; forwards (ALB) invoke events to localhost:${PORT}.
 COPY --from=public.ecr.aws/awsguru/aws-lambda-adapter:0.9.1 /lambda-adapter /opt/extensions/lambda-adapter
 ENV PORT=8080
+# Allow app startup to continue past Lambda's 10s init phase limit
+ENV AWS_LWA_ASYNC_INIT=true
+# Poll a path inside the servlet context (root "/" is outside /api/v2/species-lists)
+ENV AWS_LWA_READINESS_CHECK_PATH=/api/v2/species-lists/actuator/health/readiness
 WORKDIR /app
 COPY --from=builder /build/target/lists-service /app/lists-service
 EXPOSE 8080
