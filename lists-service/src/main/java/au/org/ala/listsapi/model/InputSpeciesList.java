@@ -7,17 +7,11 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
-import lombok.extern.jackson.Jacksonized;
 
 @NoArgsConstructor
 @Data
-@SuperBuilder
-@AllArgsConstructor
-@Jacksonized
 @Schema(description = "Input specification for species list")
 public class InputSpeciesList {
 

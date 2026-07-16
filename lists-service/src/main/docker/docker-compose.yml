@@ -29,23 +29,42 @@ services:
       - "9300:9300"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://elasticsearch:9200"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
+      interval: 2s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
   mongodb:
     image: mongo:6.0
     container_name: species-lists-mongo
     restart: on-failure
     ports:
       - "27017:27017"
+    extra_hosts:
+      - "mock.localhost:mock-oauth2-server"
     volumes:
       - ./data/species-lists/mongo/db:/data/db
-  # namematching:
-  #   image: atlasoflivingaustralia/ala-namematching-service:v20210811-3
-  #   container_name: species-lists-namematching
-  #   restart: on-failure
-  #   ports:
-  #     - "9179:9179"
+    healthcheck:
+      test:
+        ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 2s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+    hostname: host.docker.internal
+
+  namematching:
+    image: ${DOCKER_REPO:-local}/inbo-vbp-namematching-service:dev
+    networks:
+      default:
+    command:
+      - /config/namematching-service/config.yml
+    ports:
+      - "9179:9179"
+    volumes:
+      - ../vlaams-biodiversiteitsportaal/config/namematching-service:/config/namematching-service:ro
+    environment:
+      LOG_LEVEL: "WARN"
+
 #  lists:
 #    image: atlasoflivingaustralia/lists-service:latest
 #    container_name: lists-service
@@ -61,4 +80,3 @@ volumes:
   mongodb_data_container:
   elasticsearch-data:
     driver: local
-

@@ -80,8 +80,12 @@ public class MetadataService {
 
         int statusCode = (int)response.get("statusCode");
         if (statusCode < 200 || statusCode > 299) {
-            logger.error(response.get("error").toString());
-            throw new Exception("Failed to create metadata entry for species list - status code: " + statusCode + " - response: " + response.get("resp").toString());
+            Object error = response.get("error");
+            Object resp = response.get("resp");
+            logger.error("Collectory call failed. status={} error={} resp={}", statusCode, error, resp);
+            throw new Exception("Failed to create metadata entry for species list - status code: " + statusCode
+                    + " - error: " + error
+                    + " - response: " + resp);
         }
 
         if (speciesList.getDataResourceUid() == null) {

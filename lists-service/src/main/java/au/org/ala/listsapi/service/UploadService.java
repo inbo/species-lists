@@ -175,7 +175,8 @@ public class UploadService {
                     () -> {
                         try {
                             asyncIngestS3(ingestList, fileIdentifier, dryRun, false);
-                        } catch (Exception e) {
+                        } catch (Throwable e) {
+                            logger.error("Async S3 ingestion failed for species list {}", ingestList.getId(), e);
                             throw new RuntimeException(e);
                         }
                     });
@@ -185,7 +186,8 @@ public class UploadService {
                     () -> {
                         try {
                             asyncIngest(ingestList, fileToLoad, dryRun, false);
-                        } catch (Exception e) {
+                        } catch (Throwable e) {
+                            logger.error("Async ingestion failed for species list {}", ingestList.getId(), e);
                             throw new RuntimeException(e);
                         }
                     });
@@ -295,7 +297,8 @@ public class UploadService {
                             () -> {
                                 try {
                                     asyncIngestS3(ingestList, fileIdentifier, dryRun, false);
-                                } catch (Exception e) {
+                                } catch (Throwable e) {
+                                    logger.error("Async S3 ingestion failed for species list {}", ingestList.getId(), e);
                                     throw new RuntimeException(e);
                                 }
                             });
@@ -311,7 +314,8 @@ public class UploadService {
                             () -> {
                                 try {
                                     asyncIngest(ingestList, fileToLoad, dryRun, false);
-                                } catch (Exception e) {
+                                } catch (Throwable e) {
+                                    logger.error("Async ingestion failed for species list {}", ingestList.getId(), e);
                                     throw new RuntimeException(e);
                                 }
                             });

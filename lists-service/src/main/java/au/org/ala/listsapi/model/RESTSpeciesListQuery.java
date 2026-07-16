@@ -1,17 +1,11 @@
 package au.org.ala.listsapi.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
-import lombok.extern.jackson.Jacksonized;
 
 @NoArgsConstructor
 @Data
-@SuperBuilder
-@AllArgsConstructor
-@Jacksonized
 public class RESTSpeciesListQuery {
 
     @Schema(description = "Unique identifier of the species list", hidden = true)
@@ -108,23 +102,24 @@ public class RESTSpeciesListQuery {
     }
 
     public RESTSpeciesListQuery copy() {
-        return new RESTSpeciesListQuery(
-                this.id,
-                this.dataResourceUid,
-                this.title,
-                this.description,
-                this.listType,
-                this.licence,
-                this.doi,
-                this.category,
-                this.region,
-                this.owner,
-                this.isVersioned,
-                this.isAuthoritative,
-                this.isPrivate,
-                this.isInvasive,
-                this.isThreatened,
-                this.isBIE,
-                this.isSDS);
+        RESTSpeciesListQuery c = new RESTSpeciesListQuery();
+        c.id = this.id;
+        c.dataResourceUid = this.dataResourceUid;
+        c.title = this.title;
+        c.description = this.description;
+        c.listType = this.listType;
+        c.licence = this.licence;
+        c.doi = this.doi;
+        c.category = this.category;
+        c.region = this.region;
+        c.owner = this.owner;
+        c.isVersioned = this.isVersioned;
+        c.isAuthoritative = this.isAuthoritative;
+        c.isPrivate = this.isPrivate;
+        c.isInvasive = this.isInvasive;
+        c.isThreatened = this.isThreatened;
+        c.isBIE = this.isBIE;
+        c.isSDS = this.isSDS;
+        return c;
     }
 }
