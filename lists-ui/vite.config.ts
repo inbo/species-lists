@@ -14,6 +14,18 @@ export default ({ mode }: { mode: string }) => {
       alias: {
         "#": "/src",
       },
+      dedupe: [
+        "react",
+        "react-dom",
+        "react/jsx-runtime",
+        "@mantine/core",
+        "@mantine/hooks",
+        "@mantine/modals",
+        "@mantine/notifications",
+        "@mantine/nprogress",
+        "@mantine/form",
+        "@mantine/dropzone",
+      ],
     },
     optimizeDeps: {
       exclude: ["@atlasoflivingaustralia/ala-mantine"],

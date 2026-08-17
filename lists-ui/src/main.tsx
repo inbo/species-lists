@@ -18,6 +18,13 @@ import { ALAProvider } from './helpers/context/ALAProvider';
 // Internationalization
 import { IntlProvider } from 'react-intl';
 import en from './locale/en.json';
+import nl from './locale/nl.json';
+
+// ponytail: legacy portal uses the `vbp-lang` cookie (see branding/src/portal/i18next.js)
+const MESSAGES = { en, nl } as const;
+const SUPPORTED = ['nl', 'en'] as const;
+const cookie = document.cookie.match(/(?:^|;\s*)vbp-lang=([^;]+)/)?.[1] ?? '';
+const locale = (SUPPORTED as readonly string[]).includes(cookie) ? cookie : 'nl';
 
 // Application
 import App from './App';
@@ -47,7 +54,7 @@ function Main() {
   return (
     <AuthProvider userManager={userManager} onSigninCallback={handleCallback}>
       <MantineProvider theme={theme}>
-        <IntlProvider messages={en} locale='en'>
+        <IntlProvider messages={MESSAGES[locale as 'nl' | 'en']} locale={locale} defaultLocale='nl'>
           <ModalsProvider modalProps={{ radius: 'lg' }}>
             <ALAProvider>
               <Notifications
