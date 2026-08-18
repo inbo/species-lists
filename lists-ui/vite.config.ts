@@ -18,6 +18,8 @@ export default ({ mode }: { mode: string }) => {
         "react",
         "react-dom",
         "react/jsx-runtime",
+        "react-cookie",
+        "react-intl",
         "@mantine/core",
         "@mantine/hooks",
         "@mantine/modals",
@@ -44,13 +46,18 @@ export default ({ mode }: { mode: string }) => {
           ".",
           // Add your linked library path
           //'/Users/dos009/Documents/Github/ala-mantine'
-          resolve(__dirname, "../../ala-mantine"),
+          resolve(__dirname, "../../vbp-branding"),
         ],
       },
       proxy: {
         "/api": {
           target: "http://localhost:8080", // Backend server
           changeOrigin: true, // Rewrite Host header
+        },
+        "/bie-index": {
+          target: "https://natuurdata.inbo.be",
+          changeOrigin: true,
+          secure: true,
         },
       },
     },
