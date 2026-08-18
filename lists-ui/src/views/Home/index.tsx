@@ -59,6 +59,7 @@ import { useALA } from '#/helpers/context/useALA';
 
 // Styles
 import { Link } from 'react-router';
+import { ActionButtons } from '#/components/ActionButtons';
 import { Breadcrumbs } from '../Dashboard/components/Breadcrumbs';
 import classes from './classes/index.module.css';
 
@@ -303,12 +304,10 @@ const Home = ({ routeId }: { routeId: string }) => {
 
   return (
     <>
+      <Breadcrumbs listTitle={undefined} />
       <Container fluid className={classes.speciesHeader}>
         <Grid>
-          <Grid.Col span={12}>
-            <Breadcrumbs listTitle={undefined} />
-          </Grid.Col>
-          <Grid.Col span={12}>
+          <Grid.Col span={{ base: 12, sm: 9 }}>
             <Title order={3} classNames={{ root: classes.title }}>
               {isMyListsPage ? (
               <FormattedMessage
@@ -331,21 +330,22 @@ const Home = ({ routeId }: { routeId: string }) => {
                 </Text>
               )}
             </Title>
+            {location.pathname !== '/my-lists' && (
+              <Title order={5} classNames={{ root: classes.subtitle }}>
+                <FormattedMessage
+                  id='lists.subtitle'
+                  defaultMessage='A tool for finding species checklists'
+                />
+              </Title>
+            )}
           </Grid.Col>
-          {location.pathname !== '/my-lists' && (
-            <>
-              <Grid.Col span={isMobile ? 12 : 9}>
-                <Title order={5} classNames={{ root: classes.subtitle }}>
-                  <FormattedMessage
-                    id='lists.subtitle'
-                    defaultMessage='A tool for finding species checklists'
-                  />
-                </Title>
-              </Grid.Col>
-              <Grid.Col
-                span={isMobile ? 12 : 3}
-                style={{ display: 'flex', justifyContent: 'flex-end' }}
-              >
+          <Grid.Col
+            span={{ base: 12, sm: 3 }}
+            style={{ display: 'flex', justifyContent: 'flex-end' }}
+          >
+            <Group gap='xs' justify='flex-end'>
+              <ActionButtons />
+              {location.pathname !== '/my-lists' && (
                 <Tooltip
                   label={intl.formatMessage({ id: 'openapi.button.title' })}
                   position='left'
@@ -371,9 +371,9 @@ const Home = ({ routeId }: { routeId: string }) => {
                     />
                   </Button>
                 </Tooltip>
-              </Grid.Col>
-            </>
-          )}
+              )}
+            </Group>
+          </Grid.Col>
         </Grid>
       </Container>
       <Container fluid mt='lg'>

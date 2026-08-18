@@ -41,18 +41,4 @@
 
 .speciesHeader {
   padding: 10px 30px 15px 20px;
-  z-index: 0;
-  background-repeat: no-repeat;
-  background-position: right -10px top -20px;
-
-  @mixin light {
-      background-color: var(--mantine-color-concrete-0);
-      background-image: url('/logo/logo-back-light.svg');
-  }
-
-  @mixin dark {
-      background-color: var(--mantine-color-charcoal-9);
-      background-image: url('/logo/logo-back-dark.svg');
-  }
-
 }
