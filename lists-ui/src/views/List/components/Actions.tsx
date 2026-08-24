@@ -105,8 +105,9 @@ export function Actions({
           });
 
           return;
+        } finally {
+          setFetchingQid(null);
         }
-        setFetchingQid(null);
       }
 
       if (listQid.current)
