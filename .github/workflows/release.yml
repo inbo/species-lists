@@ -1,0 +1,66 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+    branches:
+      - native-aws-lambda-image
+  workflow_dispatch:
+
+jobs:
+  publish-backend-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Login to AWS
+        uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4
+        with:
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-to-assume: ${{ secrets.AWS_SHARED_INFRA_ROLE_ARN }}
+          role-skip-session-tagging: true
+
+      - name: Docker login to Amazon ECR
+        run: |
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} \
+            | docker login --username AWS --password-stdin 632683202044.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+
+      - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
+
+      - name: Build and push Docker image
+        run: |
+          TAG=${GITHUB_REF_NAME#v}
+          docker buildx build --platform linux/amd64 \
+            --provenance=false --sbom=false \
+            --output type=image,name=632683202044.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/vbp/species-lists:${TAG},push=true,oci-mediatypes=false,compression=gzip \
+            -f lists-service/src/main/docker/lambda.Dockerfile lists-service
+
+  publish-frontend:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@inbo"
+
+      - run: bun install --frozen-lockfile
+        working-directory: lists-ui
+
+      - run: bun run build
+        working-directory: lists-ui
+
+      - run: npm publish
+        working-directory: lists-ui
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
