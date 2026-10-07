@@ -7,6 +7,10 @@ on:
     branches:
       - native-aws-lambda-image
   workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to attach the zip to (e.g. v1.0.5)"
+        required: true
 
 jobs:
   publish-backend-image:
@@ -63,9 +67,14 @@ jobs:
         working-directory: lists-ui
 
       - name: Attach zip to release
+        if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
         run: |
-          TAG="$GITHUB_REF_NAME"
-          gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --title "$TAG" --generate-notes
+          TAG="${{ inputs.tag }}"
+          [ -z "$TAG" ] && TAG="$GITHUB_REF_NAME"
+          gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --draft --title "$TAG" --generate-notes
           gh release upload "$TAG" lists-ui/lists-ui.zip --clobber
+          if [ "${{ github.event_name }}" = push ] && [ "${{ github.ref_type }}" = tag ]; then
+            gh release edit "$TAG" --draft=false
+          fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
