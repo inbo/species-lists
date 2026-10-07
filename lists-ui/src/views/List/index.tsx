@@ -49,7 +49,7 @@ import { Outlet, useLocation, useParams } from 'react-router';
 import ReactMarkdown from 'react-markdown';
 
 // Icons
-import { StopIcon } from '@atlasoflivingaustralia/ala-mantine';
+import { StopIcon } from '@inbo/vbp-branding';
 import { faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 

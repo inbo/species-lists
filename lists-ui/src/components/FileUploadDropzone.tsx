@@ -23,7 +23,7 @@ import {
   FolderIcon,
   StopIcon,
   TickIcon,
-} from '@atlasoflivingaustralia/ala-mantine';
+} from '@inbo/vbp-branding';
 import { FormattedMessage, FormattedNumber, useIntl } from 'react-intl';
 import { UploadResult } from '#/api';
 import { getErrorMessage } from '#/helpers';

@@ -17,7 +17,7 @@ const authServiceWorker = (): Plugin => ({
   configureServer(server) {
     const file = resolve(
       __dirname,
-      "node_modules/@atlasoflivingaustralia/ala-mantine/dist/service-worker.js",
+      "node_modules/@inbo/vbp-branding/dist/service-worker.js",
     );
     server.middlewares.use("/service-worker.js", (_req, res) => {
       res.setHeader("Content-Type", "text/javascript");
@@ -57,7 +57,7 @@ export default ({ mode }: { mode: string }) => {
       ],
     },
     optimizeDeps: {
-      exclude: ["@atlasoflivingaustralia/ala-mantine"],
+      exclude: ["@inbo/vbp-branding"],
     },
     // server: {
     //   https: {

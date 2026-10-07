@@ -2,7 +2,7 @@ import {
   Footer,
   Header,
   IndigenousAcknowledgement,
-} from "@atlasoflivingaustralia/ala-mantine";
+} from "@inbo/vbp-branding";
 import { useEffect } from "react";
 
 // Navigation

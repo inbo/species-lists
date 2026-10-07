@@ -1,5 +1,5 @@
 // Global styles
-import "@atlasoflivingaustralia/ala-mantine/styles";
+import "@inbo/vbp-branding/styles";
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
 import "@mantine/nprogress/styles.css";
@@ -9,7 +9,7 @@ import {
   VBPIntlProviderWrapper,
   VBPAuthProviderWrapper,
   defaultMessages,
-} from "@atlasoflivingaustralia/ala-mantine";
+} from "@inbo/vbp-branding";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";

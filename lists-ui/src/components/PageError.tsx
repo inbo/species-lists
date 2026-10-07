@@ -1,5 +1,5 @@
 import { getErrorMessage, ListError } from '#/helpers';
-import { StopIcon } from '@atlasoflivingaustralia/ala-mantine';
+import { StopIcon } from '@inbo/vbp-branding';
 import { faFile } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { isRouteErrorResponse, useLocation, useNavigate, useRouteError } from 'react-router';

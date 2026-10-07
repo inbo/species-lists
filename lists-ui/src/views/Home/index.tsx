@@ -36,7 +36,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { FormattedMessage, FormattedNumber, useIntl } from 'react-intl';
 
 // Icons
-import { StopIcon } from '@atlasoflivingaustralia/ala-mantine';
+import { StopIcon } from '@inbo/vbp-branding';
 import {
   faCode,
   faMagnifyingGlass,
