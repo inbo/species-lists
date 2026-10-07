@@ -26,6 +26,14 @@ jobs:
           java-version: "21"
           cache: maven
 
+      # Self-hosted runners have no Maven; install a pinned release into the tool cache.
+      - name: Set up Maven
+        run: |
+          mkdir -p "$RUNNER_TOOL_CACHE/maven"
+          curl -fsSL -o /tmp/maven.tgz https://archive.apache.org/dist/maven/maven-3/3.9.16/binaries/apache-maven-3.9.16-bin.tar.gz
+          tar -xzf /tmp/maven.tgz -C "$RUNNER_TOOL_CACHE/maven"
+          echo "$RUNNER_TOOL_CACHE/maven/apache-maven-3.9.16/bin" >> "$GITHUB_PATH"
+
       - run: mvn -B test
         working-directory: lists-service
 
