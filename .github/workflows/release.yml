@@ -54,10 +54,11 @@ jobs:
           registry-url: "https://npm.pkg.github.com"
           scope: "@inbo"
 
+      - name: Authenticate to GitHub Packages
+        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ~/.npmrc
+
       - run: bun install --frozen-lockfile
         working-directory: lists-ui
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - run: bun run build
         working-directory: lists-ui
