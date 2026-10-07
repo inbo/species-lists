@@ -13,13 +13,75 @@ on:
         required: true
 
 jobs:
-  publish-backend-image:
-    runs-on: ubuntu-latest
+  test-backend:
+    runs-on: [self-hosted]
     permissions:
       contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - run: mvn -B test
+        working-directory: lists-service
+
+  validate-frontend:
+    runs-on: [self-hosted]
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+
+      - name: Authenticate to GitHub Packages
+        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ~/.npmrc
+
+      - run: bun install --frozen-lockfile
+        working-directory: lists-ui
+
+      # No unit tests yet; build:production runs tsc + vite and is the gate.
+      - run: bun run build:production
+        working-directory: lists-ui
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lists-ui-dist
+          path: lists-ui/dist
+
+  build-backend-image:
+    runs-on: [self-hosted]
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
+
+      # No push: validates the Dockerfile and warms the GHA cache in parallel with tests.
+      - name: Build Docker image
+        run: |
+          docker buildx build --platform linux/amd64 \
+            --provenance=false --sbom=false \
+            --cache-from type=gha --cache-to type=gha,mode=max \
+            -f lists-service/src/main/docker/lambda.Dockerfile lists-service
+
+  release:
+    runs-on: [self-hosted]
+    needs: [test-backend, validate-frontend, build-backend-image]
+    permissions:
+      contents: write
+      packages: read
       id-token: write
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
 
       - name: Login to AWS
         uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4
@@ -33,34 +95,19 @@ jobs:
           aws ecr get-login-password --region ${{ secrets.AWS_REGION }} \
             | docker login --username AWS --password-stdin 632683202044.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
 
-      - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
-
       - name: Build and push Docker image
         run: |
           TAG=${GITHUB_REF_NAME#v}
           docker buildx build --platform linux/amd64 \
             --provenance=false --sbom=false \
+            --cache-from type=gha \
             --output type=image,name=632683202044.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/vbp/species-lists:${TAG},push=true,oci-mediatypes=false,compression=gzip \
             -f lists-service/src/main/docker/lambda.Dockerfile lists-service
 
-  release-frontend:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      packages: read
-    steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-
-      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
-
-      - name: Authenticate to GitHub Packages
-        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ~/.npmrc
-
-      - run: bun install --frozen-lockfile
-        working-directory: lists-ui
-
-      - run: bun run build:production
-        working-directory: lists-ui
+      - uses: actions/download-artifact@v4
+        with:
+          name: lists-ui-dist
+          path: lists-ui/dist
 
       - name: Zip built app
         run: zip -r lists-ui.zip dist
