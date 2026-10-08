@@ -62,11 +62,13 @@ jobs:
           name: lists-ui-dist
           path: lists-ui/dist
 
-  build-backend-image:
-    # Early Dockerfile validation on branch/dispatch runs. Skipped on tags:
-    # the release job below already builds the image there, and a skipped
-    # job still satisfies `needs`, so tags compile exactly once.
-    if: github.ref_type != 'tag'
+  build-ecs-image:
+    # Validates ecs.Dockerfile (no push, no AWS creds needed). Runs on all
+    # triggers including tags: the release job below only builds the lambda
+    # image, so nothing else covers this one.
+    # Serialized behind tests: the runner only has 7GB RAM, so the build
+    # gets the whole box instead of fighting test + frontend builds.
+    needs: [test-backend, validate-frontend]
     runs-on: [self-hosted]
     permissions:
       contents: read
@@ -83,17 +85,15 @@ jobs:
 
       - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
 
-      # No push: validates the Dockerfile (needs no AWS creds, so it runs
-      # while the OIDC role issue is being chased down).
-      - name: Build Docker image
+      - name: Build ECS image
         run: |
           docker buildx build --platform linux/arm64 \
             --provenance=false --sbom=false \
-            -f lists-service/src/main/docker/lambda.Dockerfile lists-service
+            -f lists-service/src/main/docker/ecs.Dockerfile lists-service
 
   release:
     runs-on: [self-hosted]
-    needs: [test-backend, validate-frontend, build-backend-image]
+    needs: [test-backend, validate-frontend, build-ecs-image]
     permissions:
       contents: write
       packages: read
