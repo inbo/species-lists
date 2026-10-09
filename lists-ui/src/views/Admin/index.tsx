@@ -35,6 +35,7 @@ import { IngestProgress } from '#/components/IngestProgress';
 import PageLoader from '#/components/PageLoader';
 import { getErrorMessage } from '#/helpers';
 import { useALA } from '#/helpers/context/useALA';
+import { ActionButtons } from '#/components/ActionButtons';
 import { Breadcrumbs } from '../Dashboard/components/Breadcrumbs';
 import { ActionCard } from './components/ActionCard';
 import { FetchInfo } from './components/FetchInfo';
@@ -251,20 +252,21 @@ export function Component() {
 
   return (
     <>
+      <Breadcrumbs listTitle={intl.formatMessage({ id: 'admin.title', defaultMessage: 'Admin' })}/>
       <Container fluid className={classes.speciesHeader}>
         <Grid>
-          <Grid.Col span={12}>
-            <Breadcrumbs listTitle={intl.formatMessage({ id: 'admin.title', defaultMessage: 'Admin' })}/>
-          </Grid.Col>
-          <Grid.Col span={6}>
+          <Grid.Col span={{ base: 12, sm: 6 }}>
             <Title order={3} classNames={{ root: classes.title }} >
               <FormattedMessage id='admin.title.label' defaultMessage='Admin Functions' />
             </Title>
           </Grid.Col>
-          <Grid.Col span={6} ta='right'>
+          <Grid.Col span={{ base: 12, sm: 3 }} ta='right'>
             <Title order={4} classNames={{ root: classes.title }} >
                AppVersion: <AppVersion />
             </Title>
+          </Grid.Col>
+          <Grid.Col span={{ base: 12, sm: 3 }} style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <ActionButtons />
           </Grid.Col>
         </Grid>
       </Container>

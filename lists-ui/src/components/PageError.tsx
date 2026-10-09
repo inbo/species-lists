@@ -1,10 +1,11 @@
 import { getErrorMessage, ListError } from '#/helpers';
-import { StopIcon } from '@atlasoflivingaustralia/ala-mantine';
+import { StopIcon } from '@inbo/vbp-branding';
 import { faFile } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { isRouteErrorResponse, useLocation, useNavigate, useRouteError } from 'react-router';
+import { ActionButtons } from '#/components/ActionButtons';
 import { Breadcrumbs } from '../views/Dashboard/components/Breadcrumbs';
-import { Container, Grid } from '@mantine/core';
+import { Group } from '@mantine/core';
 import { Message } from './Message';
 
 export default function PageError() {
@@ -15,13 +16,10 @@ export default function PageError() {
   if (error instanceof ListError) {
     return (
       <>
-        <Container fluid>
-          <Grid>
-            <Grid.Col span={12}>
-              <Breadcrumbs listTitle={error.breadcrumb} />
-            </Grid.Col>
-          </Grid>
-        </Container>
+        <Breadcrumbs listTitle={error.breadcrumb} />
+        <Group justify='flex-end' px='md' pt='xs'>
+          <ActionButtons />
+        </Group>
         <Message
           title={error.title}
           subtitle={error.message}
