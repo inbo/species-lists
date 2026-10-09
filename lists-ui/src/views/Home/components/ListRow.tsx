@@ -2,7 +2,7 @@ import { SpeciesList } from '#/api';
 import { ListTypeBadge } from '#/components/ListTypeBadge';
 import { useALA } from '#/helpers/context/useALA';
 import { parseDate } from '#/helpers/utils/parseListDate';
-import { MapLayersIcon } from '@atlasoflivingaustralia/ala-mantine';
+import { MapLayersIcon } from '@inbo/vbp-branding';
 import { faCalendar, faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
 import { faHashtag } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

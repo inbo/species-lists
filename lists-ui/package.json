@@ -15,7 +15,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@atlasoflivingaustralia/ala-mantine": "^1.0.7",
+    "@inbo/vbp-branding": "^1.0.10",
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
     "@fortawesome/free-brands-svg-icons": "^6.6.0",
     "@fortawesome/free-regular-svg-icons": "^6.6.0",
@@ -35,6 +35,7 @@
     "nuqs": "^2.8.6",
     "oidc-client-ts": "^3.0.1",
     "react": "^19.1.0",
+    "react-cookie": "^8.1.2",
     "react-dom": "^19.1.0",
     "react-intl": "^10.1.14",
     "react-markdown": "^10.1.0",

@@ -188,6 +188,11 @@
         <artifactId>sts</artifactId>
     </dependency>
     <dependency>
+      <groupId>io.awspring.cloud</groupId>
+      <artifactId>spring-cloud-aws-starter-secrets-manager</artifactId>
+      <version>3.4.2</version>
+    </dependency>
+    <dependency>
       <groupId>org.springframework.graphql</groupId>
       <artifactId>spring-graphql-test</artifactId>
       <scope>test</scope>
@@ -292,12 +297,24 @@
         <artifactId>spring-boot-maven-plugin</artifactId>
         <!-- <version>${project.parent.version}</version> -->
         <executions>
+        <execution>
+            <id>process-aot</id>
+            <goals>
+                <goal>process-aot</goal>
+            </goals>
+        </execution>
           <execution>
             <goals>
               <goal>repackage</goal>
             </goals>
           </execution>
+
         </executions>
+   <configuration>
+        <docker>
+            <bindHostToBuilder>true</bindHostToBuilder>
+        </docker>
+    </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -357,4 +374,52 @@
       </resource>
     </resources>
   </build>
+
+<profiles>
+    <profile>
+        <id>native</id>
+        <build>
+            <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+   <configuration>
+                        <images>
+                            <image>
+                                <name>myapp:prod</name>
+                                <build>
+                                    <dockerFile>Dockerfile.prod</dockerFile>
+                                </build>
+                            </image>
+                        </images>
+    </configuration>
+      </plugin>
+              <plugin>
+                <groupId>org.graalvm.buildtools</groupId>
+                <artifactId>native-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>build-native</id>
+                        <goals>
+                            <goal>compile-no-fork</goal>
+                        </goals>
+                        <phase>package</phase>
+                    </execution>
+                  </executions>
+                  <configuration>
+                      <buildArgs>
+                          <!-- Runner has 7GB RAM shared with other jobs: cap the
+                               image-build heap so it fails/succeeds predictably
+                               instead of getting OOM-killed. Raise on a bigger runner. -->
+                          <buildArg>-J-Xmx5g</buildArg>
+                          <buildArg>--initialize-at-build-time=ch.qos.logback</buildArg>
+                          <buildArg>--initialize-at-build-time=org.slf4j</buildArg>
+                          <buildArg>--initialize-at-run-time=org.cache2k.core.DefaultResiliencePolicy</buildArg>
+                      </buildArgs>
+            </configuration>
+                </plugin>
+            </plugins>
+        </build>
+    </profile>
+</profiles>
 </project>

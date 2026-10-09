@@ -1,0 +1,70 @@
+/* Blue colourway from the VBP brand palette; petals override --logo-body. */
+.logo {
+  --logo-base: #ec7d31;
+  --logo-eye: #ffffff;
+  --logo-body: #5b7dbf;
+  --logo-detail: #fedc00;
+
+  margin: 5em;
+}
+
+.base {
+  fill: var(--logo-base);
+}
+.eye {
+  fill: var(--logo-eye);
+}
+.detail {
+  fill: var(--logo-detail);
+  stroke: var(--logo-detail);
+}
+
+.petal {
+  fill: var(--logo-body);
+  animation: petal-cycle 4.2s linear infinite;
+}
+
+/* Wings hinge on the butterfly body at the bottom of each shape. */
+.wing {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: flap 0.9s ease-in-out infinite;
+}
+
+@keyframes petal-cycle {
+  0% {
+    fill: #5b7dbf;
+  }
+  20% {
+    fill: #55bf99;
+  }
+  40% {
+    fill: #82a53c;
+  }
+  60% {
+    fill: #c2c442;
+  }
+  80% {
+    fill: #c04684;
+  }
+  100% {
+    fill: #5b7dbf;
+  }
+}
+
+@keyframes flap {
+  0%,
+  100% {
+    transform: scaleX(1);
+  }
+  50% {
+    transform: scaleX(0.35);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .petal,
+  .wing {
+    animation: none;
+  }
+}

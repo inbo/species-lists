@@ -1,8 +1,8 @@
 # Note a DevContainer setup is available in .devcontainer/docker-compose.yml
-# which uses a version of this file, found in the spring boot project root. 
+# which uses a version of this file, found in the spring boot project root.
 # This version is kept for historical reasons and should only be used if really needed.
 # Any changes should be reflected in both files.
-version: '3.7'
+version: "3.7"
 services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.17.0-arm64
@@ -22,30 +22,49 @@ services:
     cap_add:
       - IPC_LOCK
     volumes:
-      - ${HOME}/dev/species-lists/elastic:/usr/share/elasticsearch/data
+      - ./data/elastic:/usr/share/elasticsearch/data
     restart: on-failure
     ports:
       - "9200:9200"
       - "9300:9300"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://elasticsearch:9200"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
+      interval: 2s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
   mongodb:
     image: mongo:8.0
     container_name: species-lists-mongo
     restart: on-failure
     ports:
       - "27017:27017"
+    extra_hosts:
+      - "mock.localhost:mock-oauth2-server"
     volumes:
-      - ${HOME}/dev/species-lists/mongo/db:/data/db
-  # namematching:
-  #   image: atlasoflivingaustralia/ala-namematching-service:v20210811-3
-  #   container_name: species-lists-namematching
-  #   restart: on-failure
-  #   ports:
-  #     - "9179:9179"
+      - ./data/species-lists/mongo/db:/data/db
+    healthcheck:
+      test:
+        ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 2s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+    hostname: host.docker.internal
+
+  namematching:
+    image: ${DOCKER_REPO:-local}/inbo-vbp-namematching-service:dev
+    networks:
+      default:
+    command:
+      - /config/namematching-service/config.yml
+    ports:
+      - "9179:9179"
+    volumes:
+      - ../vlaams-biodiversiteitsportaal/config/namematching-service:/config/namematching-service:ro
+    environment:
+      LOG_LEVEL: "WARN"
+
 #  lists:
 #    image: atlasoflivingaustralia/lists-service:latest
 #    container_name: lists-service

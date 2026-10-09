@@ -18,7 +18,7 @@ import org.springframework.data.elasticsearch.client.elc.ElasticsearchConfigurat
 import org.springframework.data.elasticsearch.client.elc.rest5_client.Rest5Clients;
 import org.springframework.web.client.RestTemplate;
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class Config extends ElasticsearchConfiguration {
 
   @Value("${elastic.host}")

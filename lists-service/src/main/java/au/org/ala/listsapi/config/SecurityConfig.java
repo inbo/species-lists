@@ -61,7 +61,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.pac4j.core.client.DirectClient;
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @EnableWebSecurity
 @ComponentScan(basePackages = { "au.org.ala.ws.security", "au.org.ala.security.common" })
 @EnableMethodSecurity(securedEnabled = true)

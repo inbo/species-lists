@@ -21,7 +21,7 @@ import org.springframework.context.annotation.Configuration;
 import au.org.ala.listsapi.filter.AuthMachineJwt;
 import au.org.ala.ws.security.client.AlaAuthClient;
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class AuthMachineJwtConfiguration {
     @Bean
     AuthMachineJwt authMachineJwt(Config config, AlaAuthClient alaAuthClient) {

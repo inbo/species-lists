@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
  * OpenAPI configuration for the Lists API.
  */
 @RequiredArgsConstructor
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class OpenApiConfig {
     private final MessageSource messageSource;
     private final Logger log = LoggerFactory.getLogger(OpenApiConfig.class);

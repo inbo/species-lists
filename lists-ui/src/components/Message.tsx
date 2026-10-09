@@ -1,6 +1,6 @@
 import { MouseEventHandler, ReactNode } from 'react';
 import { Anchor, Button, Center, Stack, Text, ThemeIcon } from '@mantine/core';
-import { ListIcon } from '@atlasoflivingaustralia/ala-mantine';
+import { ListIcon } from '@inbo/vbp-branding';
 
 interface MessageProps {
   title?: string;
