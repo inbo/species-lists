@@ -7,7 +7,7 @@ import { runtimeConfigPlugin } from './viteRuntimeConfigPlugin';
 
 /**
  * Dev only. In production a root app serves the auth service worker at the site
- * root; here `base` is /poc/species-lists/, so anything in `public/` would be
+ * root; here `base` is /lists/, so anything in `public/` would be
  * served below that and could not claim the "/" scope the worker needs (it
  * intercepts /biocache-service/ and /spatial-hub/portal/). Serve it from "/"
  * instead, reading on each request so rebuilds of the branding lib are picked up.
