@@ -2,11 +2,6 @@
 # yarn lockfile v1
 
 
-"@atlasoflivingaustralia/ala-mantine@^1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@atlasoflivingaustralia/ala-mantine/-/ala-mantine-1.0.7.tgz#1b4ed968848aa2d1a18aa9a1a8a8eb3732e015b0"
-  integrity sha512-wV2VLjqgHXOki0pjGukXQ5OPvyOXwk73wNxorXTtoMN+Jin6eo3aKmeFlYVQWO2ghyNEFt5sQBB9JALv7kdXlw==
-
 "@axe-core/react@^4.12.1":
   version "4.12.1"
   resolved "https://registry.yarnpkg.com/@axe-core/react/-/react-4.12.1.tgz#f5ea70a81e911626846dff12d1be7c4c5713bab9"
@@ -420,6 +415,11 @@
   resolved "https://registry.yarnpkg.com/@formatjs/fast-memoize/-/fast-memoize-3.1.6.tgz#fca16a7d60f89df48f506f130f58223d7d81c2a2"
   integrity sha512-H5aexk1Le7T9TPmscacZ+1pR6CTa2n1wq+HDVGXhH8TzUlQQpeXzZs91dRtmFHrbeNbjPFPfQujUqm7MHgVoXQ==
 
+"@formatjs/fast-memoize@3.1.7":
+  version "3.1.7"
+  resolved "https://registry.yarnpkg.com/@formatjs/fast-memoize/-/fast-memoize-3.1.7.tgz#5f79b3756e4bcb5faee47b3a2f01216e1212c9e4"
+  integrity sha512-zXfhLpvA6T7+efdt9JLbBwZ00tT7NsBMDVnDu8rpHeNNv8KfRZAMo2gkG0k9lK/Nzc//3kJ9pImsfuJxk3KhUA==
+
 "@formatjs/icu-messageformat-parser@3.5.12":
   version "3.5.12"
   resolved "https://registry.yarnpkg.com/@formatjs/icu-messageformat-parser/-/icu-messageformat-parser-3.5.12.tgz#120384e7767fc3741a740c700463daff7ccbf048"
@@ -427,10 +427,22 @@
   dependencies:
     "@formatjs/icu-skeleton-parser" "2.1.10"
 
+"@formatjs/icu-messageformat-parser@3.5.16":
+  version "3.5.16"
+  resolved "https://registry.yarnpkg.com/@formatjs/icu-messageformat-parser/-/icu-messageformat-parser-3.5.16.tgz#16690932372773b94d5021465ae2c5b62b0dcab2"
+  integrity sha512-kl6b/4D56gjGZi4ZewSmvXbalHwjOUI5ogEHPZqw42goeXTTrL7/yuPzvdrvr0QigDtvaOeb+UeMf62jks43Yg==
+  dependencies:
+    "@formatjs/icu-skeleton-parser" "2.1.11"
+
 "@formatjs/icu-skeleton-parser@2.1.10":
   version "2.1.10"
   resolved "https://registry.yarnpkg.com/@formatjs/icu-skeleton-parser/-/icu-skeleton-parser-2.1.10.tgz#a72859339c68ce29d595d27c481115a50b8b6527"
   integrity sha512-XuSva+8ZGawk8VnD5VD6UeH8KarQ/Z022zgjHDoHmlNiAewstXuuzXc0Hk5pGFSdG+nNw5bfJKXqj1ZXHn9yUA==
+
+"@formatjs/icu-skeleton-parser@2.1.11":
+  version "2.1.11"
+  resolved "https://registry.yarnpkg.com/@formatjs/icu-skeleton-parser/-/icu-skeleton-parser-2.1.11.tgz#09226edf55a18e3fea80304d2cc95aaeb0095436"
+  integrity sha512-j8cUmOJzVgkHuS0QiQ6ga76UIoLOFSAMWhs7aZJztH3aAdCOAE6vpC8KVvFB4cU10ON0y2/5oOVmPJ43s2lTwA==
 
 "@formatjs/intl@4.1.14":
   version "4.1.14"
@@ -440,6 +452,15 @@
     "@formatjs/fast-memoize" "3.1.6"
     "@formatjs/icu-messageformat-parser" "3.5.12"
     intl-messageformat "11.2.9"
+
+"@formatjs/intl@4.1.18":
+  version "4.1.18"
+  resolved "https://registry.yarnpkg.com/@formatjs/intl/-/intl-4.1.18.tgz#c5bf7991c2d593151a14eecb4566c3e6a674d728"
+  integrity sha512-d+AFsn+luyMAUTQImPJEK76bhEvzFKRG/1PCf1Q6sCH3ojHyHgJJkfvUFElpbDkihtm4uedK7/zoG24EL285nw==
+  dependencies:
+    "@formatjs/fast-memoize" "3.1.7"
+    "@formatjs/icu-messageformat-parser" "3.5.16"
+    intl-messageformat "11.2.13"
 
 "@fortawesome/fontawesome-common-types@6.7.2":
   version "6.7.2"
@@ -512,6 +533,15 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/retry/-/retry-0.4.3.tgz#c2b9d2e374ee62c586d3adbea87199b1d7a7a6ba"
   integrity sha512-bV0Tgo9K4hfPCek+aMAn81RppFKv2ySDQeMoSZuvTASywNTnVJCArCZE2FWqpvIatKu7VMRLWlR1EazvVhDyhQ==
 
+"@inbo/vbp-branding@^1.0.10":
+  version "1.0.10"
+  resolved "https://npm.pkg.github.com/download/@inbo/vbp-branding/1.0.10/95fcee170b64d2ddfc190455048b31a4a84788dc#95fcee170b64d2ddfc190455048b31a4a84788dc"
+  integrity sha512-73O1RInMFUUVmHDy1yt/PBFeMwzDOCUXLzfBUSlEOk/f7+sKgc0d3MrztR5MHB2w6eJchKLSjjjzFv/qPQxitQ==
+  dependencies:
+    "@mantine/form" "^9.5.1"
+    react-cookie "^8.1.2"
+    react-intl "10.1.20"
+
 "@jridgewell/gen-mapping@^0.3.12", "@jridgewell/gen-mapping@^0.3.5":
   version "0.3.13"
   resolved "https://registry.yarnpkg.com/@jridgewell/gen-mapping/-/gen-mapping-0.3.13.tgz#6342a19f44347518c93e43b1ac69deb3c4656a1f"
@@ -570,6 +600,15 @@
   resolved "https://registry.yarnpkg.com/@mantine/form/-/form-7.17.8.tgz#daeaff81d465ffa0fcde6de0c418559a937d4202"
   integrity sha512-cRLAMYOsZT17jyV9Myl29xacgaswGVAz3Ku6bvphBFad7Nzorra809uKFJxm2yKW5NknZ4ENHSXjyru7k0GTGA==
   dependencies:
+    fast-deep-equal "^3.1.3"
+    klona "^2.0.6"
+
+"@mantine/form@^9.5.1":
+  version "9.7.1"
+  resolved "https://registry.yarnpkg.com/@mantine/form/-/form-9.7.1.tgz#5c5c1bf168898871e5e3fc9d649e24ecf47408fb"
+  integrity sha512-fVjWYdiMBw21z/bqUkFghyV1MsANHoqCZaXji0k4KJaRCHh7cD3qhBuLIVhc2hUCKXQ3cHiJTHLz3ayoE/mRZg==
+  dependencies:
+    "@standard-schema/spec" "^1.1.0"
     fast-deep-equal "^3.1.3"
     klona "^2.0.6"
 
@@ -718,6 +757,11 @@
   resolved "https://registry.yarnpkg.com/@standard-schema/spec/-/spec-1.0.0.tgz#f193b73dc316c4170f2e82a881da0f550d551b9c"
   integrity sha512-m2bOd0f2RT9k8QJx1JN85cZYyH1RqFBdlwtkSlf4tBDYLCiiZnv1fIIwacK6cqwXavOydf0NPToMQgpKq+dVlA==
 
+"@standard-schema/spec@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@standard-schema/spec/-/spec-1.1.0.tgz#a79b55dbaf8604812f52d140b2c9ab41bc150bb8"
+  integrity sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==
+
 "@svgr/babel-plugin-add-jsx-attribute@8.0.0":
   version "8.0.0"
   resolved "https://registry.yarnpkg.com/@svgr/babel-plugin-add-jsx-attribute/-/babel-plugin-add-jsx-attribute-8.0.0.tgz#4001f5d5dd87fa13303e36ee106e3ff3a7eb8b22"
@@ -833,6 +877,13 @@
   integrity sha512-WPs+bbQw5aCj+x6laNGWLH3wviHtoCv/P3+otBhbOhJgG8qtpdAMlTCxLtsTWA7LH1Oh/bFCHsBn0TPS5m30EQ==
   dependencies:
     "@types/unist" "*"
+
+"@types/hoist-non-react-statics@^3.3.7":
+  version "3.3.7"
+  resolved "https://registry.yarnpkg.com/@types/hoist-non-react-statics/-/hoist-non-react-statics-3.3.7.tgz#306e3a3a73828522efa1341159da4846e7573a6c"
+  integrity sha512-PQTyIulDkIDro8P+IHbKCsw7U2xxBYflVzW/FgWdCAePD9xGSidgA76/GeJ6lBKoblyhf9pBY763gbrN+1dI8g==
+  dependencies:
+    hoist-non-react-statics "^3.3.0"
 
 "@types/json-schema@^7.0.15":
   version "7.0.15"
@@ -1192,7 +1243,7 @@ convert-source-map@^2.0.0:
   resolved "https://registry.yarnpkg.com/convert-source-map/-/convert-source-map-2.0.0.tgz#4b560f649fc4e918dd0ab75cf4961e8bc882d82a"
   integrity sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==
 
-cookie@^1.0.1:
+cookie@^1.0.1, cookie@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/cookie/-/cookie-1.1.1.tgz#3bb9bdfc82369db9c2f69c93c9c3ceb310c88b3c"
   integrity sha512-ei8Aos7ja0weRpFzJnEA9UHJ/7XQmqglbRwnf2ATjcB9Wq874VKH9kfjjirM6UhU2/E5fFYadylyhFldcqSidQ==
@@ -1583,6 +1634,13 @@ hast-util-whitespace@^3.0.0:
   dependencies:
     "@types/hast" "^3.0.0"
 
+hoist-non-react-statics@^3.3.0, hoist-non-react-statics@^3.3.2:
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-3.3.2.tgz#ece0acaf71d62c2969c2ec59feff42a4b1a85b45"
+  integrity sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==
+  dependencies:
+    react-is "^16.7.0"
+
 html-url-attributes@^3.0.0:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/html-url-attributes/-/html-url-attributes-3.0.1.tgz#83b052cd5e437071b756cd74ae70f708870c2d87"
@@ -1615,6 +1673,14 @@ inline-style-parser@0.2.7:
   version "0.2.7"
   resolved "https://registry.yarnpkg.com/inline-style-parser/-/inline-style-parser-0.2.7.tgz#b1fc68bfc0313b8685745e4464e37f9376b9c909"
   integrity sha512-Nb2ctOyNR8DqQoR0OwRG95uNWIC0C1lCgf5Naz5H6Ji72KZ8OcFZLz2P5sNgwlyoJ8Yif11oMuYs5pBQa86csA==
+
+intl-messageformat@11.2.13:
+  version "11.2.13"
+  resolved "https://registry.yarnpkg.com/intl-messageformat/-/intl-messageformat-11.2.13.tgz#63d705ba41f1352f267bc74161f406cef866753a"
+  integrity sha512-JaPaE6TIX+TAS5XLhDUh41geLw4QfBHX4s5pW8Km+L9fVC8HzB9yOuhbh4EMR/F1+8C6b9qk4763Cv+LdOG1kg==
+  dependencies:
+    "@formatjs/fast-memoize" "3.1.7"
+    "@formatjs/icu-messageformat-parser" "3.5.16"
 
 intl-messageformat@11.2.9:
   version "11.2.9"
@@ -2382,6 +2448,15 @@ punycode@^2.1.0:
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.3.1.tgz#027422e2faec0b25e1549c3e1bd8309b9133b6e5"
   integrity sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==
 
+react-cookie@^8.1.2:
+  version "8.1.2"
+  resolved "https://registry.yarnpkg.com/react-cookie/-/react-cookie-8.1.2.tgz#957db13f74876af047eb339af407a7eca262b9dd"
+  integrity sha512-S45Z1y1dHyYfLEI4bFKQICuP+SwJqTPWbdc2ZpE6aQSdjSVJAjUDfwTPq8B7BWieIsgyyEWMb/QOrudtwJMjXA==
+  dependencies:
+    "@types/hoist-non-react-statics" "^3.3.7"
+    hoist-non-react-statics "^3.3.2"
+    universal-cookie "^8.0.0"
+
 react-dom@^19.1.0:
   version "19.2.7"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-19.2.7.tgz#0450dc9ae9ddbff76ef196401cd8b8c7fb466ccc"
@@ -2396,6 +2471,15 @@ react-dropzone-esm@15.2.0:
   dependencies:
     prop-types "^15.8.1"
 
+react-intl@10.1.20:
+  version "10.1.20"
+  resolved "https://registry.yarnpkg.com/react-intl/-/react-intl-10.1.20.tgz#df408faff18fba6054f81d2dfe1e3a1803eef54b"
+  integrity sha512-dvD9F7CqjlB/cIWakFzScGVPDmhWk34cFWY0etWuVNc07Zmc56OKjQwqu9q74evbttSto5wFXchZtvdRXy/Tkg==
+  dependencies:
+    "@formatjs/icu-messageformat-parser" "3.5.16"
+    "@formatjs/intl" "4.1.18"
+    intl-messageformat "11.2.13"
+
 react-intl@^10.1.14:
   version "10.1.14"
   resolved "https://registry.yarnpkg.com/react-intl/-/react-intl-10.1.14.tgz#ee5f2f0f681c8b7954304fc884c87d9eb10c7950"
@@ -2405,7 +2489,7 @@ react-intl@^10.1.14:
     "@formatjs/intl" "4.1.14"
     intl-messageformat "11.2.9"
 
-react-is@^16.13.1:
+react-is@^16.13.1, react-is@^16.7.0:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
@@ -2762,6 +2846,13 @@ unist-util-visit@^5.0.0:
     "@types/unist" "^3.0.0"
     unist-util-is "^6.0.0"
     unist-util-visit-parents "^6.0.0"
+
+universal-cookie@^8.0.0:
+  version "8.1.2"
+  resolved "https://registry.yarnpkg.com/universal-cookie/-/universal-cookie-8.1.2.tgz#2faf7fb206575e658d5bfb999021b7f5fed81cf5"
+  integrity sha512-kcKzTGNsxVytujrYOvQbvh//QyFrA53HrzCGyzh6i9ujCww5gfPrLK0tG+jJD40SIIldiEjBNPPSR8fBMS21GA==
+  dependencies:
+    cookie "^1.1.1"
 
 update-browserslist-db@^1.3.3:
   version "1.3.3"

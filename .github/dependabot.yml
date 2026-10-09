@@ -12,3 +12,9 @@ updates:
     directory: "lists-ui"
     schedule:
       interval: "daily"
+
+  # 3. GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"

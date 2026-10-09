@@ -1,0 +1,127 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to attach the zip to (e.g. v1.0.5)"
+        required: true
+
+jobs:
+  test-backend:
+    runs-on: [self-hosted]
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      # Self-hosted runners have no Maven; install a pinned release into the tool cache.
+      - name: Set up Maven
+        run: |
+          mkdir -p "$RUNNER_TOOL_CACHE/maven"
+          curl -fsSL -o /tmp/maven.tgz https://archive.apache.org/dist/maven/maven-3/3.9.16/binaries/apache-maven-3.9.16-bin.tar.gz
+          tar -xzf /tmp/maven.tgz -C "$RUNNER_TOOL_CACHE/maven"
+          echo "$RUNNER_TOOL_CACHE/maven/apache-maven-3.9.16/bin" >> "$GITHUB_PATH"
+
+      - run: mvn -B test
+        working-directory: lists-service
+
+  validate-frontend:
+    runs-on: [self-hosted]
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Authenticate to GitHub Packages
+        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ~/.npmrc
+
+      - run: corepack enable
+        working-directory: lists-ui
+
+      - run: yarn install --frozen-lockfile
+        working-directory: lists-ui
+
+      # No unit tests yet; build:production runs tsc + vite and is the gate.
+      - run: yarn build:production
+        working-directory: lists-ui
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lists-ui-dist
+          path: lists-ui/dist
+
+  release:
+    # Builds the ECS image once and pushes it: no separate validation build.
+    # Serialized behind tests: the runner only has 7GB RAM, so the build
+    # gets the whole box instead of fighting test + frontend builds.
+    runs-on: [self-hosted]
+    needs: [test-backend, validate-frontend]
+    permissions:
+      contents: write
+      packages: read
+      id-token: write
+    env:
+      ECR_ACCOUNT_ID: "632683202044"
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
+
+      - name: Login to AWS
+        uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4
+        with:
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-to-assume: ${{ secrets.AWS_SHARED_INFRA_ROLE_ARN }}
+          role-skip-session-tagging: true
+
+      - name: Docker login to Amazon ECR
+        run: |
+          aws ecr get-authorization-token --region ${{ secrets.AWS_REGION }} --registry-ids ${{ env.ECR_ACCOUNT_ID }} \
+            --query 'authorizationData[].authorizationToken' --output text | base64 --decode | cut -d: -f2- \
+            | docker login --username AWS --password-stdin ${{ env.ECR_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+
+      - name: Build and push Docker image
+        run: |
+          TAG=${GITHUB_REF_NAME#v}
+          docker buildx build --platform linux/arm64 \
+            --provenance=false --sbom=false \
+            --cache-from type=gha \
+            --output type=image,name=${{ env.ECR_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/inbo-vbp-species-list:${TAG},push=true,oci-mediatypes=false,compression=gzip \
+            -f lists-service/src/main/docker/ecs.Dockerfile lists-service
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: lists-ui-dist
+          path: lists-ui/dist
+
+      - name: Zip built app
+        run: zip -r lists-ui.zip dist
+        working-directory: lists-ui
+
+      - name: Attach zip to release
+        if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
+        run: |
+          TAG="${{ inputs.tag }}"
+          [ -z "$TAG" ] && TAG="$GITHUB_REF_NAME"
+          gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --draft --title "$TAG" --generate-notes
+          gh release upload "$TAG" lists-ui/lists-ui.zip --clobber
+          if [ "${{ github.event_name }}" = push ] && [ "${{ github.ref_type }}" = tag ]; then
+            gh release edit "$TAG" --draft=false
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
