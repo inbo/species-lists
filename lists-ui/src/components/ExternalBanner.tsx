@@ -10,7 +10,7 @@ import {
   InfoIcon,
   CautionIcon,
   mainShades,
-} from '@atlasoflivingaustralia/ala-mantine';
+} from '@inbo/vbp-branding';
 
 interface Message {
   message: string;

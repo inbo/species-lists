@@ -23,7 +23,7 @@ import {
   FolderIcon,
   StopIcon,
   TickIcon,
-} from '@atlasoflivingaustralia/ala-mantine';
+} from '@inbo/vbp-branding';
 import { FormattedMessage, FormattedNumber, useIntl } from 'react-intl';
 import { UploadResult } from '#/api';
 import { getErrorMessage } from '#/helpers';
@@ -133,7 +133,7 @@ export const FileUploadDropzone = ({
           <Badge> {<FormattedNumber value={result.rowCount} />} rows</Badge>
           <Text lineClamp={2} size='sm' c='dimmed'>
             <b><FormattedMessage id='upload.additional.fields' defaultMessage='Additional Fields' />:</b>{' '}
-            {result.fieldList.length > 0 ? result.fieldList.join(', ') : 'N/A'}
+            {(result.fieldList?.length ?? 0) > 0 ? result.fieldList.join(', ') : 'N/A'}
           </Text>
         </>
       ),

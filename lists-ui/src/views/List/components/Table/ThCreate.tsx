@@ -1,5 +1,5 @@
 import { ActionIcon, Text, TextInput } from '@mantine/core';
-import { PlusIcon } from '@atlasoflivingaustralia/ala-mantine';
+import { PlusIcon } from '@inbo/vbp-branding';
 
 // Mantine Notifications / Modals helpers
 import { notifications } from '@mantine/notifications';

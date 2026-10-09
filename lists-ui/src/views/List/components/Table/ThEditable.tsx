@@ -11,7 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ThNoWrap } from './ThNoWrap';
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons';
 
-import { TickIcon } from '@atlasoflivingaustralia/ala-mantine';
+import { TickIcon } from '@inbo/vbp-branding';
 import { faUndo } from '@fortawesome/free-solid-svg-icons';
 import { notifications } from '@mantine/notifications';
 import { getErrorMessage } from '#/helpers';

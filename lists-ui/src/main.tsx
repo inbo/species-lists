@@ -1,66 +1,70 @@
 // Global styles
-import '@atlasoflivingaustralia/ala-mantine/styles';
-import '@mantine/core/styles.css';
-import '@mantine/notifications/styles.css';
-import '@mantine/nprogress/styles.css';
+import "@inbo/vbp-branding/styles";
+import "@mantine/core/styles.css";
+import "@mantine/notifications/styles.css";
+import "@mantine/nprogress/styles.css";
 
-import { theme } from '@atlasoflivingaustralia/ala-mantine';
-import { MantineProvider } from '@mantine/core';
-import { ModalsProvider } from '@mantine/modals';
-import { Notifications } from '@mantine/notifications';
-import notificationStyles from './Notifications.module.css';
+import {
+  theme,
+  VBPIntlProviderWrapper,
+  VBPAuthProviderWrapper,
+  defaultMessages,
+} from "@inbo/vbp-branding";
+import { ColorSchemeScript, MantineProvider } from "@mantine/core";
+import { ModalsProvider } from "@mantine/modals";
+import { Notifications } from "@mantine/notifications";
+import notificationStyles from "./Notifications.module.css";
+import { CookiesProvider } from "react-cookie";
 
 // Authentication
-import { User, UserManager, WebStorageStateStore } from 'oidc-client-ts';
-import { AuthProvider } from 'react-oidc-context';
-import { ALAProvider } from './helpers/context/ALAProvider';
+import { ALAProvider } from "./helpers/context/ALAProvider";
 
 // Internationalization
-import { IntlProvider } from 'react-intl';
-import en from './locale/en.json';
+import nl from "./locale/nl.json";
 
 // Application
-import App from './App';
-import router from './Router';
+import App from "./App";
 
-export const userManager = new UserManager({
-  authority: import.meta.env.VITE_AUTH_AUTHORITY,
-  client_id: import.meta.env.VITE_AUTH_CLIENT_ID,
-  redirect_uri: import.meta.env.VITE_AUTH_REDIRECT_URI,
-  scope: import.meta.env.VITE_AUTH_SCOPE,
-  userStore: new WebStorageStateStore({ store: window.sessionStorage }),
-  automaticSilentRenew: false,
-});
+// `domain` is used as the silent-renew redirect target, so it must be absolute.
+const APP_URL = new URL(import.meta.env.BASE_URL, window.location.origin).href;
 
 function Main() {
-
-  async function handleCallback(user: User | void) {
-    // If there's a user, it's a sign-in callback
-    if (user) {
-      const targetUrl = (user?.state as any)?.targetUrl || '/';
-      await router.navigate(targetUrl, { replace: true });
-    } else {
-      window.history.replaceState({}, document.title, '/');
-    }
-  }
-
   return (
-    <AuthProvider userManager={userManager} onSigninCallback={handleCallback}>
-      <MantineProvider theme={theme}>
-        <IntlProvider messages={en} locale='en'>
-          <ModalsProvider modalProps={{ radius: 'lg' }}>
-            <ALAProvider>
-              <Notifications
-                transitionDuration={400}
-                position='top-right'
-                classNames={notificationStyles}
-              />
-              <App />
-            </ALAProvider>
-          </ModalsProvider>
-        </IntlProvider>
-      </MantineProvider>
-    </AuthProvider>
+    <CookiesProvider>
+      <VBPAuthProviderWrapper
+        domain={APP_URL}
+        authority={import.meta.env.VITE_AUTH_AUTHORITY}
+        clientId={import.meta.env.VITE_AUTH_CLIENT_ID}
+        scope={import.meta.env.VITE_AUTH_SCOPE}
+        authCookieDomain={import.meta.env.VITE_AUTH_COOKIE_DOMAIN}
+      >
+        <ColorSchemeScript defaultColorScheme="auto" />
+        <MantineProvider theme={theme} defaultColorScheme="auto">
+          <VBPIntlProviderWrapper
+            initialMessages={{ ...defaultMessages.nl, ...nl }}
+            messagesLoader={async (loc: "en" | "nl") =>
+              loc === "nl"
+                ? { ...defaultMessages.nl, ...nl }
+                : {
+                    ...defaultMessages.en,
+                    ...(await import("./locale/en.json")).default,
+                  }
+            }
+          >
+            <ModalsProvider modalProps={{ radius: "lg" }}>
+              <ALAProvider>
+                <Notifications
+                  transitionDuration={400}
+                  position="top-right"
+                  classNames={notificationStyles}
+                />
+                <App />
+              </ALAProvider>
+            </ModalsProvider>
+          </VBPIntlProviderWrapper>
+        </MantineProvider>
+      </VBPAuthProviderWrapper>
+    </CookiesProvider>
   );
 }
 
