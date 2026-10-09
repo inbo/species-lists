@@ -19,7 +19,7 @@ import {
   Tooltip,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { CautionIcon, ExternalLinkIcon } from '@atlasoflivingaustralia/ala-mantine';
+import { CautionIcon, ExternalLinkIcon } from '@inbo/vbp-branding';
 import { faExclamationTriangle, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FormattedMessage, useIntl } from 'react-intl';
