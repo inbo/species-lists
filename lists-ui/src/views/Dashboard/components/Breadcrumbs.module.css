@@ -1,6 +1,6 @@
 .link {
   @mixin light {
-    color: black;
+    color: var(--mantine-primary-color-filled);
   }
 
   @mixin dark {
@@ -18,13 +18,32 @@
   }
 }
 
+/* full-width bar under the header, in normal flow */
+.bar {
+  display: flex;
+  align-items: center;
+  padding-left: var(--mantine-spacing-md);
+  padding-right: var(--mantine-spacing-md);
+  border-bottom: 1px solid var(--mantine-primary-color-filled);
+}
+
+
 .breadcrumbs {
-  @media (max-width: 65em) {
-    align-self: flex-start;
+  align-items: center;
+  min-width: 0;
+  padding: 0;
+
+  /* pad the items, not the container, so the separator can stretch full height */
+  :global(.mantine-Breadcrumbs-breadcrumb) {
+    padding: var(--mantine-spacing-xs) 0;
   }
 
-  /* Desktop Sizes */
-  @media (min-width: 65em) {
-    align-: center
+  /* legacy slanted separators: full-height hairline, glyph hidden */
+  :global(.mantine-Breadcrumbs-separator) {
+    align-self: stretch;
+    width: 1px;
+    font-size: 0;
+    background: var(--mantine-primary-color-1);
+    transform: skewX(15deg);
   }
 }

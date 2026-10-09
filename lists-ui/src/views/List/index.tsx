@@ -47,7 +47,7 @@ import { Outlet, useLocation, useParams } from 'react-router';
 import ReactMarkdown from 'react-markdown';
 
 // Icons
-import { StopIcon } from '@atlasoflivingaustralia/ala-mantine';
+import { StopIcon } from '@inbo/vbp-branding';
 
 import tableClasses from './classes/Table.module.css';
 
@@ -73,6 +73,7 @@ import { Summary } from './components/Summary';
 import { ThSortable } from './components/Table/ThSortable';
 
 // Styles
+import { ActionButtons } from '#/components/ActionButtons';
 import { Breadcrumbs } from '../Dashboard/components/Breadcrumbs';
 import classes from './classes/index.module.css';
 
@@ -454,13 +455,10 @@ function List() {
   if (error) {
     return (
       <>
-        <Container fluid className={classes.speciesHeader}>
-          <Grid>
-            <Grid.Col span={12}>
-              <Breadcrumbs listTitle={error instanceof ListError ? error.breadcrumb : (pageTitle ?? 'Error')} />
-            </Grid.Col>
-          </Grid>
-        </Container>
+        <Breadcrumbs listTitle={error instanceof ListError ? error.breadcrumb : (pageTitle ?? 'Error')} />
+        <Group justify='flex-end' px='md' pt='xs'>
+          <ActionButtons />
+        </Group>
         <Message
           title={error instanceof ListError ? error.title : intl.formatMessage({ id: 'list.error.title', defaultMessage: 'An error occurred' })}
           subtitle={getErrorMessage(error)}
@@ -485,16 +483,10 @@ function List() {
           onDeleted={handleItemDeleted}
         />
       )}
-      <Container fluid className={classes.speciesHeader}>
-        <Grid align="center">
-          <Grid.Col span={12}>
-            <Breadcrumbs listTitle={pageTitle ?? undefined} />
-          </Grid.Col>
-        </Grid>
-      </Container>
+      <Breadcrumbs listTitle={pageTitle ?? undefined} />
       <Container fluid className={classes.listDetails}>
         <Grid>
-          <Grid.Col span={12}>
+          <Grid.Col span={{ base: 12, sm: 9 }}>
             <Title order={4} classNames={{root: classes.title}}>
               <Text component='span' classNames={{root: classes.listTitlePrefix}} inherit>
                 <FormattedMessage id='list.title.prefix' defaultMessage='List details' />
@@ -512,6 +504,9 @@ function List() {
                 meta?.title
               )}
             </Title>
+          </Grid.Col>
+          <Grid.Col span={{ base: 12, sm: 3 }} style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <ActionButtons />
           </Grid.Col>
           <Grid.Col span={12} pt={6} >
             <Flex direction='row' justify='space-between' gap={16}>

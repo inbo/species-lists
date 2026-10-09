@@ -17,6 +17,7 @@ import { FileUploadDropzone } from '#/components/FileUploadDropzone';
 import { IngestProgress } from '#/components/IngestProgress';
 import { ListMeta } from '#/components/ListMeta';
 import { useALA } from '#/helpers/context/useALA';
+import { ActionButtons } from '#/components/ActionButtons';
 import { Breadcrumbs } from '../Dashboard/components/Breadcrumbs';
 
 import classes from './index.module.css';
@@ -78,15 +79,16 @@ export default function Component() {
 
   return (
     <>
+      <Breadcrumbs listTitle={intl.formatMessage({ id: 'upload.title', defaultMessage: 'Upload' })}/>
       <Container fluid className={classes.speciesHeader}>
         <Grid>
-          <Grid.Col span={12}>
-            <Breadcrumbs listTitle={intl.formatMessage({ id: 'upload.title', defaultMessage: 'Upload' })}/>
-          </Grid.Col>
-          <Grid.Col span={12}>
+          <Grid.Col span={{ base: 12, sm: 9 }}>
             <Title order={3} classNames={{ root: classes.title }} >
               <FormattedMessage id='upload.title.label' defaultMessage='Upload a list' />
             </Title>
+          </Grid.Col>
+          <Grid.Col span={{ base: 12, sm: 3 }} style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <ActionButtons />
           </Grid.Col>
         </Grid>
       </Container>
