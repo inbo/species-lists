@@ -1,19 +1,12 @@
-import { ChevronRightIcon } from '@atlasoflivingaustralia/ala-mantine';
-import {
-  Anchor,
-  Breadcrumbs as Base,
-  Flex,
-  Text
-} from '@mantine/core';
-import { Link, useLocation } from 'react-router';
+import { Anchor, Breadcrumbs as Base, Text } from "@mantine/core";
+import { Link, useLocation } from "react-router";
 
-import { ActionButtons } from '#/components/ActionButtons';
-import { FormattedMessage } from 'react-intl';
-import classes from './Breadcrumbs.module.css';
+import { FormattedMessage } from "react-intl";
+import classes from "./Breadcrumbs.module.css";
 
 // Helper function to capitalize the first letter of a string
 const capitalize = (input?: string) =>
-  input ? input.charAt(0).toUpperCase() + input.slice(1) : '';
+  input ? input.charAt(0).toUpperCase() + input.slice(1) : "";
 
 interface BreadcrumbsProps {
   listTitle: string | undefined;
@@ -23,7 +16,7 @@ export function Breadcrumbs({ listTitle }: BreadcrumbsProps) {
   const { pathname } = useLocation();
 
   // Split pathname into parts, remove empty strings, and remove the leading empty string from the initial '/'
-  const pathParts = pathname.split('/').filter(part => part !== '');
+  const pathParts = pathname.split("/").filter((part) => part !== "");
 
   // Define the structure for breadcrumb items
   interface BreadcrumbItem {
@@ -38,25 +31,27 @@ export function Breadcrumbs({ listTitle }: BreadcrumbsProps) {
 
   // Home link (always present)
   items.push({
-    label: 'Home',
-    href: import.meta.env.VITE_ALA_HOME_PAGE, 
+    label: "Home",
+    href: import.meta.env.VITE_ALA_HOME_PAGE,
   });
 
   // Species lists link (or text if on the species lists index)
   items.push({
-    label: 'Species lists',
-    to: '/',
-    isText: pathParts.length === 0 || (pathParts[0] === 'list' && pathParts.length === 1), // Text if on the species lists index or '/list'
+    label: "Species lists",
+    to: "/",
+    isText:
+      pathParts.length === 0 ||
+      (pathParts[0] === "list" && pathParts.length === 1), // Text if on the species lists index or '/list'
   });
 
   // Handle other path parts dynamically
   // Build up the path incrementally for linking
-  let currentPath = '';
+  let currentPath = "";
   pathParts.forEach((part, index) => {
     currentPath += `/${part}`;
 
     // Skip the first part if it's 'list' as it's handled by the 'Species lists' item
-    if (index === 0 && part === 'list') {
+    if (index === 0 && part === "list") {
       // If it's just '/list', the 'Species lists' item is text, so no further breadcrumb needed for '/list' itself.
       // If it's a list details page or subpage, the list title/ID will be added next.
       return;
@@ -65,7 +60,8 @@ export function Breadcrumbs({ listTitle }: BreadcrumbsProps) {
     const isLast = index === pathParts.length - 1;
 
     // Handle list title specifically when on a list details page or subpage
-    if (pathParts[0] === 'list' && index === 1) { // This is the list ID part
+    if (pathParts[0] === "list" && index === 1) {
+      // This is the list ID part
       if (listTitle) {
         items.push({
           label: listTitle,
@@ -93,72 +89,88 @@ export function Breadcrumbs({ listTitle }: BreadcrumbsProps) {
     }
   });
 
-
   // Render the breadcrumb items
   const breadcrumbElements = items.map((item, index) => {
     // Skip rendering the 'Species lists' link if we are on the root '/'
-    if (item.to === '/' && pathParts.length === 0) {
-      return <Text size='sm' key={`breadcrumb-${item.id}-${index}`}>Species lists</Text>;
+    if (item.to === "/" && pathParts.length === 0) {
+      return (
+        <Text size="sm" key={`breadcrumb-${item.id}-${index}`}>
+          Species lists
+        </Text>
+      );
     }
 
     // If the first path part is 'list' and this item is the 'Species lists' link and there are more parts,
     // render it as a link. Otherwise, if it's the '/list' page itself (pathParts.length === 1 && pathParts[0] === 'list'), render as text.
-    if (item.to === '/' && pathParts[0] === 'list' && pathParts.length > 1) {
+    if (item.to === "/" && pathParts[0] === "list" && pathParts.length > 1) {
       return (
-        <Anchor component={Link} to={item.to} className={classes.link} size='sm' key={`breadcrumbLink-${item.id}-${index}`}>
+        <Anchor
+          component={Link}
+          to={item.to}
+          className={classes.link}
+          size="sm"
+          key={`breadcrumbLink-${item.id}-${index}`}
+        >
           {item.label}
         </Anchor>
       );
     }
     if (item.isText) {
       return (
-        <Text size='sm' truncate='end' key={`breadcrumbText-${item.id}-${index}`}>
-          <FormattedMessage id={`breadcrumb.${item.id}`} defaultMessage={item.label}/>
+        <Text
+          size="sm"
+          truncate="end"
+          key={`breadcrumbText-${item.id}-${index}`}
+        >
+          <FormattedMessage
+            id={`breadcrumb.${item.id}`}
+            defaultMessage={item.label}
+          />
         </Text>
       );
     } else if (item.href) {
       return (
-        <Anchor href={item.href} className={classes.link} size='sm' key={`breadcrumbHref-${item.id}-${index}`}>
+        <Anchor
+          href={item.href}
+          className={classes.link}
+          size="sm"
+          key={`breadcrumbHref-${item.id}-${index}`}
+        >
           {item.label}
         </Anchor>
       );
     } else if (item.to) {
       // Prevent linking the 'Species lists' item if it's the last/current item displayed
-      if (item.to === '/' && pathParts.length === 0) {
+      if (item.to === "/" && pathParts.length === 0) {
         return (
-          <Text size='sm' key={`breadcrumbText-${item.id}-${index}`}>
+          <Text size="sm" key={`breadcrumbText-${item.id}-${index}`}>
             {item.label}
           </Text>
-        )
+        );
       }
       return (
-        <Anchor component={Link} to={item.to} className={classes.link} size='sm' key={`breadcrumbLink-${item.id}-${index}`}>
-          <FormattedMessage id={`breadcrumb.${item.label}`} defaultMessage={item.label}/>
+        <Anchor
+          component={Link}
+          to={item.to}
+          className={classes.link}
+          size="sm"
+          key={`breadcrumbLink-${item.id}-${index}`}
+        >
+          <FormattedMessage
+            id={`breadcrumb.${item.label}`}
+            defaultMessage={item.label}
+          />
         </Anchor>
       );
     }
     return null; // Should not happen
   });
 
-
   return (
-    <>
-      <Flex
-        direction={{ base: 'column', sm: 'row' }}
-        justify="space-between"
-        align="center"
-        gap="md"
-      >
-        <Base
-          // style={{ alignSelf: 'flex-start' }}
-          className={classes.breadcrumbs}
-          separator={<ChevronRightIcon size={12} />}
-          separatorMargin={5}
-        >
-          {breadcrumbElements}
-        </Base>
-        <ActionButtons />
-      </Flex>
-    </>
+    <div className={classes.bar}>
+      <Base className={classes.breadcrumbs} separator="\" separatorMargin="sm">
+        {breadcrumbElements}
+      </Base>
+    </div>
   );
 }
