@@ -48,7 +48,8 @@ const ProtectedAdmin = () => (
 const notFoundLoader = () => {
   throw new Response('Not Found', { status: 404 });
 };
-const router = createBrowserRouter([
+const router = createBrowserRouter(
+  [
   {
     // Redirect legacy SDS URL to new filter format
     path: 'public/speciesLists',
@@ -143,6 +144,8 @@ const router = createBrowserRouter([
       }
     ],
   },
-]);
+  ],
+  { basename: import.meta.env.BASE_URL }
+);
 
 export default router;
