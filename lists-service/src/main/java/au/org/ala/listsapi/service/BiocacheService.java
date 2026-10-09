@@ -109,12 +109,18 @@ public class BiocacheService {
             .followRedirects(HttpClient.Redirect.ALWAYS)
             .build();
 
-        HttpRequest httpRequest = HttpRequest.newBuilder(new URI(biocacheUrl + "/ws/qid"))
+        HttpRequest httpRequest = HttpRequest.newBuilder(new URI(biocacheUrl + "/qid"))
             .header("Content-Type", "application/x-www-form-urlencoded")
             .POST(HttpRequest.BodyPublishers.ofString(formData))
             .build();
 
         HttpResponse<String> response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() < 200 || response.statusCode() >= 300) {
+            log.error("Biocache qid request to {} failed with status {}", httpRequest.uri(), response.statusCode());
+            throw new IllegalStateException(
+                    "Biocache qid request failed with status " + response.statusCode());
+        }
 
         return response.body();
     }
