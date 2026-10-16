@@ -59,7 +59,6 @@ import { getErrorMessage, mergeFacetsWithBase, parseAsFilters, showActiveFilterT
 import { useALA } from '#/helpers/context/useALA';
 
 // Styles
-import { Link } from 'react-router';
 import { ActionButtons } from '#/components/ActionButtons';
 import { Breadcrumbs } from '../Dashboard/components/Breadcrumbs';
 import classes from './classes/index.module.css';
@@ -83,7 +82,7 @@ const sortField = [
 const MAX_ENTRIES = 10000; // Maximum number of entries the API allows us to paginate through (for performance reasons)
 
 const Home = ({ routeId }: { routeId: string }) => {
-  useDocumentTitle('ALA Species Lists');
+  useDocumentTitle('Vlaams Biodiversiteitsportaal | Lists');
   const isMobile = useMediaQuery(`(max-width: ${em(750)})`) || false;
   const intl = useIntl();
   const ala = useALA();
@@ -381,8 +380,8 @@ const Home = ({ routeId }: { routeId: string }) => {
                   <Button
                     variant='default'
                     radius='xl'
-                    component={Link}
-                    to={import.meta.env.VITE_API_BASEURL}
+                    component='a'
+                    href={import.meta.env.VITE_API_BASEURL}
                     target='openapi'
                     rel='noopener noreferrer'
                     title={intl.formatMessage({ id: 'openapi.button.title' })}
