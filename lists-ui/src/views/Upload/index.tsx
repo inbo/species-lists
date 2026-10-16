@@ -33,7 +33,7 @@ const convertFileNameToTitle = (fileName: string): string => {
  * @returns {JSX.Element} - The rendered Upload component
  */
 export default function Component() {
-  useDocumentTitle('ALA Lists | Upload');
+  useDocumentTitle('Vlaams Biodiversiteitsportaal | Lists | Upload');
 
   const [ingesting, setIngesting] = useState<boolean>(false);
   const [originalName, setOriginalName] = useState<string | null>(null);
