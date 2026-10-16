@@ -43,7 +43,7 @@ import { FetchInfo } from './components/FetchInfo';
 import classes from './index.module.css';
 
 export function Component() {
-  useDocumentTitle('ALA Lists | Admin');
+  useDocumentTitle('Vlaams Biodiversiteitsportaal | Lists | Admin');
   const intl = useIntl();
   const AppVersion = () => <span>v{__APP_VERSION__}</span>
 
