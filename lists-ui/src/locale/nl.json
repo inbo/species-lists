@@ -16,7 +16,7 @@
   "ingest.step.finalising": "Lijst afronden",
 
   "breadcrumb.home": "Home",
-  "breadcrumb.my-lists": "Mijn lijsten",
+  "breadcrumb.my-lists": "Mijn Lijsten",
 
   "classification.kingdom": "Rijk",
   "classification.phylum": "Stam",
@@ -52,7 +52,7 @@
   "record": "record",
   "records": "records",
   "lists.home.title": "Soortenlijsten",
-  "lists.myLists.title": "Mijn lijsten",
+  "lists.myLists.title": "Mijn Lijsten",
   "lists.subtitle": "Ontdek, maak en beheer soortenlijsten met aangepaste eigenschappen zoals kenmerken, geografische reikwijdte, beschermingsstatus, gevoeligheid, invasiviteit, enz.",
   "list.title.prefix": "Lijstdetails",
   "lists.noListsFound.subTitle": "Probeer een filter te verwijderen of te zoeken met een andere query",
@@ -109,7 +109,7 @@
 
   "upload.title": "Uploaden",
   "upload.title.label": "Upload een lijst",
-  "upload.button.label": "Lijst uploaden",
+  "upload.button.label": "Lijst opladen",
   "upload.button.title": "Upload een lijst vanuit een CSV-bestand",
   "upload.help.prefix": "Upload",
   "reingest.help.prefix": "Opnieuw inladen",
