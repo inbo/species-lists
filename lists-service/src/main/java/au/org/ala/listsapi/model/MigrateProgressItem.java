@@ -26,6 +26,9 @@ public class MigrateProgressItem {
     @CreatedDate public Date started;
 
     public MigrateProgressItem(long total) {
+        // @Builder.Default does not apply in hand-written constructors; the
+        // progress doc must live under the fixed id "_" or nothing can find it.
+        this.id = "_";
         this.total = total;
     }
 }
