@@ -64,8 +64,12 @@ export function Component() {
   const mounted = useMounted();
   const [runAction, setRunAction] = useState<string>('');
 
-  // Watch migration progress
+  // Watch migration progress: poll continuously while on this page. The backend
+  // only writes a progress row after it has fetched all legacy lists, which can
+  // take minutes after clicking, so keep polling regardless of current state.
   useEffect(() => {
+    if (!ala.rest.admin) return;
+
     async function checkMigrationProgress() {
       try {
         const progress = await ala.rest.admin!.migrateProgress();
@@ -73,57 +77,14 @@ export function Component() {
         setMigrationDisabled(Boolean(progress));
       } catch (error) {
         console.log('admin error', error);
-        // Show error notification
-        notifications.show({
-          message: getErrorMessage(error),
-          position: 'bottom-left',
-          radius: 'md',
-        });
       } finally {
         setInitialLoading(false);
       }
     }
 
-    // Check migration progress initially on mount, and continually poll if running
-    if (ala.rest.admin) {
-      if (migrationProgress) {
-        const timer = setTimeout(checkMigrationProgress, 10000);
-        return () => clearTimeout(timer);
-      } else {
-        checkMigrationProgress();
-      }
-    }
-  }, [migrationProgress, ala]);
-
-  // Start polling for migration progress to appear
-  const handleMigrationStart = useCallback(async () => {
-    setMigrationDisabled(true);
-    let attempts = 0;
-    const maxAttempts = 5;
-    const check = async () => {
-      try {
-        const progress = await ala.rest.admin!.migrateProgress();
-        if (progress) {
-          setMigrationProgress(progress);
-        } else if (attempts < maxAttempts) {
-          attempts++;
-          setTimeout(check, 2000);
-        } else {
-          // Migration completed with nothing to import
-          setMigrationDisabled(false);
-          notifications.show({
-            message: 'Migration completed with no new lists to import. All lists are already up to date.',
-            position: 'bottom-left',
-            radius: 'md',
-          });
-        }
-      } catch (error) {
-        console.log('Migration start error', error);
-        setMigrationDisabled(false);
-      }
-    };
-
-    setTimeout(check, 5000);
+    checkMigrationProgress();
+    const timer = setInterval(checkMigrationProgress, 10000);
+    return () => clearInterval(timer);
   }, [ala]);
 
   // Show warning message on page navigation
@@ -189,18 +150,18 @@ export function Component() {
         cancelProps: { radius: 'md' },
         onConfirm: async () => {
           let cancelSucessNotification = false;
+          if (['reindex', 'rematch', 'migrate-all'].includes(action)) {
+            setMigrationDisabled(true);
+          }
           try {
             switch (action) {
               case 'reindex':
-                handleMigrationStart();
                 await ala.rest.admin?.reindex();
                 break;
               case 'rematch':
-                handleMigrationStart();
                 await ala.rest.admin?.rematch();
                 break;
               case 'migrate-all':
-                handleMigrationStart();
                 await ala.rest.admin?.migrate();
                 break;
               case 'migrate-reset':
@@ -239,7 +200,7 @@ export function Component() {
         },
       });
     },
-    [ala, migrationProgress]
+    [ala]
   );
 
   if (!ala.isAdmin) {
