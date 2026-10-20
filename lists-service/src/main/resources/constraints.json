@@ -12,18 +12,17 @@
     { "value": "PROFILE", "label": "Profile List" }
   ],
   "region": [
-    { "value": "ACT", "label": "Australian Capital Territory" },
-    { "value": "NSW", "label": "New South Wales" },
-    { "value": "NT", "label": "Northern Territory" },
-    { "value": "QLD", "label": "Queensland" },
-    { "value": "SA", "label": "South Australia" },
-    { "value": "TAS", "label": "Tasmania" },
-    { "value": "VIC", "label": "Victoria" },
-    { "value": "WA", "label": "Western Australia" },
-    { "value": "Australia", "label": "Australia" },
-    { "value": "New Zealand", "label": "New Zealand" },
-    { "value": "GLO", "label": "Global" },
-    { "value": "OTH", "label": "Other" }
+    { "value": "WVL", "label": "West-Vlaanderen" },
+    { "value": "OVL", "label": "Oost-Vlaanderen" },
+    { "value": "VAN", "label": "Antwerpen" },
+    { "value": "VLI", "label": "Limburg" },
+    { "value": "VBR", "label": "Vlaams-Brabant" },
+    { "value": "BEB", "label": "Brussels Hoofdstedelijk Gewest" },
+    { "value": "WAL", "label": "Wallonië" },
+    { "value": "BEL", "label": "België" },
+    { "value": "EUR", "label": "Europa" },
+    { "value": "GLO", "label": "Wereldwijd" },
+    { "value": "OTH", "label": "Andere" }
   ],
   "licence": [
     { "value": "CC0", "label": "Creative Commons Zero" },
