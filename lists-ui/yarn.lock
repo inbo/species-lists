@@ -533,10 +533,10 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/retry/-/retry-0.4.3.tgz#c2b9d2e374ee62c586d3adbea87199b1d7a7a6ba"
   integrity sha512-bV0Tgo9K4hfPCek+aMAn81RppFKv2ySDQeMoSZuvTASywNTnVJCArCZE2FWqpvIatKu7VMRLWlR1EazvVhDyhQ==
 
-"@inbo/vbp-branding@^1.0.11":
-  version "1.0.11"
-  resolved "https://npm.pkg.github.com/download/@inbo/vbp-branding/1.0.11/6ee21721e144c697edb4e009736bf29fd5bde714#6ee21721e144c697edb4e009736bf29fd5bde714"
-  integrity sha512-r9hWtLfbaiLbpJfIZzzXxNYri2/kauCOxFwxYRjei/xt9blVmfO4rrO383DbKDCSuUVsx6KzbcgqUiP4UATVpw==
+"@inbo/vbp-branding@^1.0.12":
+  version "1.0.12"
+  resolved "https://npm.pkg.github.com/download/@inbo/vbp-branding/1.0.12/269ccae309bec888410d0943d504c11b9209d319#269ccae309bec888410d0943d504c11b9209d319"
+  integrity sha512-wgRkYHdVaN4D9xnLgiB+ralPaSQu5PpgZDcaREQOtxd/R0PSyt33jEIgLl0jurKzqdvZvld3ZxvGPIdiRcsmEw==
   dependencies:
     "@mantine/form" "^9.5.1"
     react-cookie "^8.1.2"
