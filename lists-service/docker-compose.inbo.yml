@@ -18,7 +18,9 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     environment:
-      SPRING_CONFIG_ADDITIONAL-LOCATION: file:/config/lists-service-config.properties
+      # canonical relaxed-binding name for spring.config.additional-location
+      # (the dash form SPRING_CONFIG_ADDITIONAL-LOCATION is not picked up)
+      SPRING_CONFIG_ADDITIONALLOCATION: file:/config/lists-service-config.properties
     depends_on:
       mongodb:
         condition: service_healthy
@@ -30,7 +32,10 @@ services:
       - "8080:8080"
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.0-arm64
+    # multi-arch tag: docker picks amd64/arm64 automatically (the -arm64
+    # suffix forces QEMU emulation on x86 hosts, where ES exits with
+    # "seccomp unavailable: CONFIG_SECCOMP not compiled into kernel")
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.0
     container_name: species-lists-elastic
     environment:
       - node.name=elasticsearch
@@ -88,6 +93,10 @@ services:
       - "9999:9999"
     environment:
       SERVER_PORT: 9999
+      # default login user (see config.json / login.html), same pattern as VBP
+      JSON_CONFIG_PATH: /config/config.json
+    volumes:
+      - ./config/mock-oauth2-server:/config:ro
     hostname: host.docker.internal
 
   namematching:
