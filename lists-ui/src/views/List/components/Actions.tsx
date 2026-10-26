@@ -310,16 +310,22 @@ export function Actions({
     modals.openConfirmModal({
       title: (
         <Text fw='bold' size='lg'>
-          Confirm list deletion
+          <FormattedMessage id='actions.deleteList.title' defaultMessage='Confirm list deletion' />
         </Text>
       ),
       children: (
         <Text>
-          Please confirm that you wish to delete <b>{meta.title}</b>, this
-          action cannot be undone
+          <FormattedMessage
+            id='actions.deleteList.message'
+            defaultMessage='Please confirm that you wish to delete {title}, this action cannot be undone'
+            values={{ title: <b>{meta.title}</b> }}
+          />
         </Text>
       ),
-      labels: { confirm: 'Confirm', cancel: 'Cancel' },
+      labels: {
+        confirm: intl.formatMessage({ id: 'listmeta.button.confirm.label', defaultMessage: 'Confirm' }),
+        cancel: intl.formatMessage({ id: 'listmeta.button.cancel.label', defaultMessage: 'Cancel' }),
+      },
       confirmProps: {
         variant: 'filled',
         radius: 'md',
@@ -342,21 +348,28 @@ export function Actions({
         }
       },
     });
-  }, [ala, meta, navigate]);
+  }, [ala, meta, navigate, intl]);
 
   const handleRematch = useCallback(() => {
     modals.openConfirmModal({
       title: (
         <Text fw='bold' size='lg'>
-          Confirm list rematch
+          <FormattedMessage id='actions.rematchList.title' defaultMessage='Confirm list rematch' />
         </Text>
       ),
       children: (
         <Text>
-          Please confirm that you wish to rematch <b>{meta.title}</b>
+          <FormattedMessage
+            id='actions.rematchList.message'
+            defaultMessage='Please confirm that you wish to rematch {title}'
+            values={{ title: <b>{meta.title}</b> }}
+          />
         </Text>
       ),
-      labels: { confirm: 'Confirm', cancel: 'Cancel' },
+      labels: {
+        confirm: intl.formatMessage({ id: 'listmeta.button.confirm.label', defaultMessage: 'Confirm' }),
+        cancel: intl.formatMessage({ id: 'listmeta.button.cancel.label', defaultMessage: 'Cancel' }),
+      },
       confirmProps: {
         variant: 'filled',
         radius: 'md',
@@ -376,7 +389,7 @@ export function Actions({
         }
       },
     });
-  }, [ala, meta, onRematch]);
+  }, [ala, meta, onRematch, intl]);
 
   const handleMetaEdit = useCallback(() => {
     modals.open({
