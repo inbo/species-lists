@@ -32,12 +32,14 @@ export function Breadcrumbs({ listTitle }: BreadcrumbsProps) {
   // Home link (always present)
   items.push({
     label: "Home",
+    id: "home",
     href: import.meta.env.VITE_ALA_HOME_PAGE,
   });
 
   // Species lists link (or text if on the species lists index)
   items.push({
     label: "Species lists",
+    id: "species-lists",
     to: "/",
     isText:
       pathParts.length === 0 ||
@@ -95,7 +97,7 @@ export function Breadcrumbs({ listTitle }: BreadcrumbsProps) {
     if (item.to === "/" && pathParts.length === 0) {
       return (
         <Text size="sm" key={`breadcrumb-${item.id}-${index}`}>
-          Species lists
+          <FormattedMessage id="breadcrumb.species-lists" defaultMessage="Species lists" />
         </Text>
       );
     }
@@ -136,7 +138,7 @@ export function Breadcrumbs({ listTitle }: BreadcrumbsProps) {
           size="sm"
           key={`breadcrumbHref-${item.id}-${index}`}
         >
-          {item.label}
+          <FormattedMessage id={`breadcrumb.${item.id}`} defaultMessage={item.label} />
         </Anchor>
       );
     } else if (item.to) {
@@ -144,7 +146,7 @@ export function Breadcrumbs({ listTitle }: BreadcrumbsProps) {
       if (item.to === "/" && pathParts.length === 0) {
         return (
           <Text size="sm" key={`breadcrumbText-${item.id}-${index}`}>
-            {item.label}
+            <FormattedMessage id={`breadcrumb.${item.id}`} defaultMessage={item.label} />
           </Text>
         );
       }
@@ -157,7 +159,7 @@ export function Breadcrumbs({ listTitle }: BreadcrumbsProps) {
           key={`breadcrumbLink-${item.id}-${index}`}
         >
           <FormattedMessage
-            id={`breadcrumb.${item.label}`}
+            id={`breadcrumb.${item.id}`}
             defaultMessage={item.label}
           />
         </Anchor>
