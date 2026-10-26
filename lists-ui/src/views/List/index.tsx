@@ -558,6 +558,7 @@ function List() {
               {!isReingest && !loading && (
                 <Actions
                   meta={meta!}
+                  filters={filters ?? []}
                   editing={editing}
                   rematching={rematching}
                   onEditingChange={setEditing}

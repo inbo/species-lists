@@ -1,0 +1,29 @@
+{
+    "interactiveLogin": true,
+    "httpServer": "NettyWrapper",
+    "loginPagePath": "/config/login.html",
+    "tokenCallbacks": [
+        {
+            "issuerId": "default",
+            "tokenExpiry": 120,
+            "requestMappings": [
+                {
+                    "requestParam": "grant_type",
+                    "match": "*",
+                    "claims": {
+                        "username": "test-user",
+                        "given_name": "Testo",
+                        "family_name": "Von der Test",
+                        "email": "test.natuurdata@inbo.be",
+                        "ala:roles": [
+                            "ADMIN",
+                            "EDITOR"
+                        ],
+                        "client_id": "vbp-branding",
+                        "scope": "openid profile ala/roles"
+                    }
+                }
+            ]
+        }
+    ]
+}

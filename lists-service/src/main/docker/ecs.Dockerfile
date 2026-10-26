@@ -18,7 +18,7 @@ WORKDIR /opt/atlas/$APP_ARTIFACT
 
 COPY --from=builder --chown=1000:1000 /app/target/lists-service-*.jar ./app.jar
 
-HEALTHCHECK CMD curl -fsS http://localhost:8080/api/v2/species-lists/actuator/health/readiness || exit 1
+HEALTHCHECK CMD curl -fsS http://localhost:8080/api/lists/actuator/health/readiness || exit 1
 
 USER 1000:1000
 EXPOSE $SERVER_PORT
