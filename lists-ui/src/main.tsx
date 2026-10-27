@@ -5,16 +5,16 @@ import "@mantine/notifications/styles.css";
 import "@mantine/nprogress/styles.css";
 
 import {
-  theme,
-  VBPIntlProviderWrapper,
-  VBPAuthProviderWrapper,
   defaultMessages,
+  theme,
+  VBPAuthProviderWrapper,
+  VBPIntlProviderWrapper,
 } from "@inbo/vbp-branding";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
-import notificationStyles from "./Notifications.module.css";
 import { CookiesProvider } from "react-cookie";
+import notificationStyles from "./Notifications.module.css";
 
 // Authentication
 import { ALAProvider } from "./helpers/context/ALAProvider";
