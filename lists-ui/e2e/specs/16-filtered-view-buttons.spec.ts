@@ -1,9 +1,9 @@
-import { test, expect } from '../fixtures/test';
+import { test, expect, appUrl } from '../fixtures/test';
 import type { Page, Route } from '@playwright/test';
 
 const TEST_QID = 'test-qid-123';
-const FILTERED_URL = '/list/list-acacia-1?filters=classification.kingdom:Plantae';
-const UNFILTERED_URL = '/list/list-acacia-1';
+const FILTERED_URL = appUrl('/list/list-acacia-1?filters=classification.kingdom:Plantae');
+const UNFILTERED_URL = appUrl('/list/list-acacia-1');
 
 // The page keeps a "Species details" drawer mounted (also role=dialog), so the
 // confirm modal is located by Mantine's data-modal-content marker instead.
@@ -11,6 +11,12 @@ const modal = (page: Page) => page.locator('section[data-modal-content]');
 // Mantine confirm modals render [cancel, confirm] in that DOM order
 const confirmButton = (page: Page) => modal(page).getByRole('button').last();
 const cancelButton = (page: Page) => modal(page).getByRole('button').first();
+// The records button label differs per deployment ("View occurrence records"
+// on ALA, "View records" on VBP); match both. On VBP the closed confirm modal
+// stays mounted with an identically-labelled confirm button, so keep the
+// page-level button (which precedes the modal in DOM order).
+const recordsButton = (page: Page) => page.getByRole('button', { name: /View (occurrence )?records/i }).first();
+const spatialButton = (page: Page) => page.getByRole('button', { name: /View in spatial portal/i });
 // Scope radios are selected by value to stay independent of the UI locale
 const scopeRadios = (page: Page) => modal(page).locator('input[type="radio"]');
 
@@ -49,7 +55,7 @@ test.describe('16. Filtered view buttons (occurrence records / spatial portal)',
     const { qidRequests, openedUrls } = await stubExternalLinks(page);
 
     await page.goto(UNFILTERED_URL);
-    const button = page.getByRole('button', { name: /View occurrence records/i });
+    const button = recordsButton(page);
     await expect(button).toBeVisible();
     await button.click();
 
@@ -73,7 +79,7 @@ test.describe('16. Filtered view buttons (occurrence records / spatial portal)',
     const { qidRequests, openedUrls } = await stubExternalLinks(page);
 
     await page.goto(FILTERED_URL);
-    const button = page.getByRole('button', { name: /View occurrence records/i });
+    const button = recordsButton(page);
     await expect(button).toBeVisible();
     await button.click();
 
@@ -105,7 +111,7 @@ test.describe('16. Filtered view buttons (occurrence records / spatial portal)',
     const { qidRequests, openedUrls } = await stubExternalLinks(page);
 
     await page.goto(UNFILTERED_URL);
-    const button = page.getByRole('button', { name: /View in spatial portal/i });
+    const button = spatialButton(page);
     await expect(button).toBeVisible();
     await button.click();
 
@@ -124,7 +130,7 @@ test.describe('16. Filtered view buttons (occurrence records / spatial portal)',
     const { qidRequests, openedUrls } = await stubExternalLinks(page);
 
     await page.goto(FILTERED_URL);
-    const button = page.getByRole('button', { name: /View in spatial portal/i });
+    const button = spatialButton(page);
     await expect(button).toBeVisible();
     await button.click();
 
@@ -146,7 +152,7 @@ test.describe('16. Filtered view buttons (occurrence records / spatial portal)',
     const { qidRequests, openedUrls } = await stubExternalLinks(page);
 
     await page.goto(FILTERED_URL);
-    const button = page.getByRole('button', { name: /View in spatial portal/i });
+    const button = spatialButton(page);
     await expect(button).toBeVisible();
     await button.click();
 
