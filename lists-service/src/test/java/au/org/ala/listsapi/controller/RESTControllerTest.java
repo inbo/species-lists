@@ -160,6 +160,20 @@ class RESTControllerTest {
     }
 
     @Test
+    void testSpeciesListQid_ReturnsRawQuery_whenSmallEnough() throws Exception {
+        when(speciesListMongoRepository.findByIdOrDataResourceUid("public123", "public123"))
+                .thenReturn(Optional.of(publicList));
+        when(biocacheService.getSpeciesListQuery(eq(publicList), anyList()))
+                .thenReturn(Map.of("query", "(lsid:lsid:1)"));
+
+        ResponseEntity<Object> response = restController.speciesListQid("public123", null);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertTrue(response.getBody().toString().contains("(lsid:lsid:1)"));
+    }
+
+    @Test
     void testSpeciesListQid_NotFound() throws Exception {
         when(speciesListMongoRepository.findByIdOrDataResourceUid("unknown", "unknown"))
                 .thenReturn(Optional.empty());

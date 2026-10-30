@@ -2,8 +2,10 @@ import { test, expect, appUrl } from '../fixtures/test';
 import type { Page, Route } from '@playwright/test';
 
 const TEST_QID = 'test-qid-123';
+const TEST_RAW_QUERY = '(lsid:urn:lsid:afd.taxon:abc OR lsid:urn:lsid:afd.taxon:def)';
 const FILTERED_URL = appUrl('/list/list-acacia-1?filters=classification.kingdom:Plantae');
 const UNFILTERED_URL = appUrl('/list/list-acacia-1');
+const PRIVATE_URL = appUrl('/list/list-private-3');
 
 // The page keeps a "Species details" drawer mounted (also role=dialog), so the
 // confirm modal is located by Mantine's data-modal-content marker instead.
@@ -22,9 +24,13 @@ const scopeRadios = (page: Page) => modal(page).locator('input[type="radio"]');
 
 /**
  * Stubs window.open so popups are captured instead of navigating, and mocks the
- * speciesListQid endpoint, recording every request URL it receives.
+ * speciesListQid endpoint, recording every request URL it receives. The mock
+ * response defaults to a QID; pass { query } to test the raw-query flow.
  */
-async function stubExternalLinks(page: Page) {
+async function stubExternalLinks(
+  page: Page,
+  qidResponse: { qid?: string; query?: string } = { qid: TEST_QID }
+) {
   const qidRequests: string[] = [];
 
   await page.addInitScript(() => {
@@ -40,7 +46,7 @@ async function stubExternalLinks(page: Page) {
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify({ qid: TEST_QID }),
+      body: JSON.stringify(qidResponse),
     });
   });
 
@@ -115,15 +121,78 @@ test.describe('16. Filtered view buttons (occurrence records / spatial portal)',
     await expect(button).toBeVisible();
     await button.click();
 
-    await expect.poll(() => qidRequests.length, { timeout: 10_000 }).toBe(1);
-    expect(qidRequests[0]).not.toContain('filters=');
+    // Public lists are linked directly with the species_list filter - the
+    // spatial hub accepts a plain biocache q term and registers its own QID
+    await expect.poll(() => qidRequests.length, { timeout: 10_000 }).toBe(0);
 
     // No modal is shown
     await expect(modal(page)).toHaveCount(0);
 
     await expect.poll(openedUrls).toHaveLength(1);
     const urls = await openedUrls();
-    expect(urls[0]).toContain('q=qid:test-qid-123');
+    expect(urls[0]).toContain('q=species_list:dr1001');
+  });
+
+  test('occurrence records for a private list goes through the service query flow', async ({ page }) => {
+    const { qidRequests, openedUrls } = await stubExternalLinks(page);
+
+    await page.goto(PRIVATE_URL);
+    const button = recordsButton(page);
+    await expect(button).toBeVisible();
+    await button.click();
+
+    await expect(modal(page)).toBeVisible();
+    await confirmButton(page).click();
+
+    // Private lists cannot be resolved by biocache via species_list, so the
+    // lists-service query flow is used (no filters passed, unfiltered result)
+    await expect.poll(() => qidRequests.length, { timeout: 10_000 }).toBe(1);
+    expect(qidRequests[0]).not.toContain('filters=');
+
+    await expect.poll(openedUrls).toHaveLength(1);
+    expect((await openedUrls())[0]).toContain('q=qid:test-qid-123');
+  });
+
+  test('raw query responses are opened directly without an expiry warning', async ({ page }) => {
+    const { qidRequests, openedUrls } = await stubExternalLinks(page, { query: TEST_RAW_QUERY });
+
+    await page.goto(FILTERED_URL);
+    const button = recordsButton(page);
+    await expect(button).toBeVisible();
+    await button.click();
+
+    await expect(modal(page)).toBeVisible();
+    await confirmButton(page).click();
+
+    await expect.poll(() => qidRequests.length, { timeout: 10_000 }).toBe(1);
+    expect(qidRequests[0]).toContain('filters=classification.kingdom');
+
+    await expect.poll(openedUrls).toHaveLength(1);
+    // The raw query is URL-encoded into the q parameter
+    expect((await openedUrls())[0]).toContain('q=' + encodeURIComponent(TEST_RAW_QUERY));
+
+    // No expiry warning for shareable raw queries
+    await expect(page.getByText(/QID/i)).toHaveCount(0);
+  });
+
+  test('QID responses show an expiry warning notification', async ({ page }) => {
+    const { qidRequests, openedUrls } = await stubExternalLinks(page);
+
+    await page.goto(FILTERED_URL);
+    const button = recordsButton(page);
+    await expect(button).toBeVisible();
+    await button.click();
+
+    await expect(modal(page)).toBeVisible();
+    await confirmButton(page).click();
+
+    await expect.poll(() => qidRequests.length, { timeout: 10_000 }).toBe(1);
+
+    await expect.poll(openedUrls).toHaveLength(1);
+    expect((await openedUrls())[0]).toContain('q=qid:test-qid-123');
+
+    // The warning explains the QID has a limited shelf life
+    await expect(page.getByText(/stop working after one week/i)).toBeVisible();
   });
 
   test('spatial portal asks for a scope choice when filters are active', async ({ page }) => {
