@@ -113,7 +113,7 @@ export function Breadcrumbs({ listTitle }: BreadcrumbsProps) {
           size="sm"
           key={`breadcrumbLink-${item.id}-${index}`}
         >
-          {item.label}
+          <FormattedMessage id="breadcrumb.species-lists" defaultMessage="Species lists" />
         </Anchor>
       );
     }
