@@ -105,9 +105,9 @@ export function Actions({
   const ala = useALA();
   const authorisedForList = ala.isAuthorisedForList(meta);
   const hasFilters = filters.length > 0;
-  // Maximum entries to use in a Biocache records search
-  // Value may change, see lists-service/src/main/java/au/org/ala/listsapi/service/BiocacheService.java#getQidForSpeciesList
-  const maxTaxaSearch = 2000; 
+  // Maximum taxa included in a Biocache query; matches MAX_TAXA in
+  // lists-service BiocacheService#getSpeciesListQuery
+  const maxTaxaSearch = 2000;
 
   // Authoritative Biocache link handler (moved before handleBiocacheLink)
   // Unfiltered authoritative lists link with the species list id as an fq -
@@ -124,26 +124,53 @@ export function Actions({
   }, []);
 
   // Open a hub URL with the given service result: raw query when available,
-  // otherwise the QID plus a warning about its limited shelf life
+  // otherwise the QID with a confirm modal explaining its one-week shelf life
   const openWithQuery = useCallback(
     (url: string, result: { query?: string; qid?: string }) => {
       if (result.query) {
         window.open(`${url}?q=${encodeURIComponent(result.query)}`, '_blank');
       } else if (result.qid) {
-        window.open(`${url}?q=qid:${result.qid}`, '_blank');
-        notifications.show({
-          message: intl.formatMessage({
-            id: 'actions.qidExpiryWarning',
-            defaultMessage:
-              'Because the query for this list is very long, it cannot be included in the link directly. Instead a temporary query ID (QID) was created and the link refers to it. Links using this QID stop working after one week - please revisit this list to get a fresh link.'
-          }),
-          color: 'yellow',
-          position: 'bottom-left',
-          radius: 'md',
+        modals.openConfirmModal({
+          title: (
+            <Text fw='bold' size='lg'>
+              {intl.formatMessage({ id: 'actions.qid.title', defaultMessage: 'Temporary query link' })}
+            </Text>
+          ),
+          children: (
+            <Stack gap='sm'>
+              <Text>
+                {intl.formatMessage({
+                  id: 'actions.qidExpiryWarning',
+                  defaultMessage:
+                    'Because the query for this list is very long, it cannot be included in the link directly. Instead a temporary query ID (QID) was created and the link refers to it. Links using this QID stop working after one week - please revisit this list to get a fresh link.'
+                })}
+              </Text>
+              {meta.rowCount > maxTaxaSearch && (
+                <Text>
+                  {intl.formatMessage(
+                    {
+                      id: 'actions.occurrenceRecords.limited',
+                      defaultMessage:
+                        'Only the first {limit} taxa from this list will be used in the following search, due to querying limitations.'
+                    },
+                    { limit: maxTaxaSearch }
+                  )}
+                </Text>
+              )}
+            </Stack>
+          ),
+          labels: {
+            confirm: intl.formatMessage({ id: 'actions.qid.proceed', defaultMessage: 'Proceed' }),
+            cancel: intl.formatMessage({ id: 'actions.cancel', defaultMessage: 'Cancel' })
+          },
+          confirmProps: { variant: 'filled', radius: 'md' },
+          cancelProps: { radius: 'md' },
+          onConfirm: () => window.open(`${url}?q=qid:${result.qid}`, '_blank'),
+          centered: true
         });
       }
     },
-    [intl]
+    [intl, meta]
   );
 
   // Redirect to a hub URL using the query built by the lists-service for this
@@ -200,28 +227,15 @@ export function Actions({
     [meta.isAuthoritative, meta.isPrivate, handleAuthoritativeBiocacheLink, handlePublicBiocacheLink, handleQueryRedirect]
   );
 
-  // Occurrence records modal: the existing confirm modal, extended with a
-  // species-scope choice when filters are active
+  // Occurrence records: the species-scope modal is only needed when filters
+  // are active. Without filters the click goes straight to the link; the QID
+  // explanation appears only when the service actually returns a QID for a
+  // query too large to share as a URL.
   const handleOccurrenceRecordsClick = useCallback(() => {
-    const description = ((meta.isAuthoritative && !meta.isPrivate) || !meta.isPrivate) ? (
-      <Text>
-        {intl.formatMessage({
-          id: 'actions.occurrenceRecords.authoritative',
-          defaultMessage: 'All taxa from this list will be used in the following Biocache search.'
-        })}{' '}
-        {!meta.isAuthoritative && intl.formatMessage({
-          id: 'actions.occurrenceRecords.delayMsg',
-          defaultMessage: 'Note: There may be a delay in the occurrence record page loading with larger lists.'
-        })}
-      </Text>
-    ) : (
-      <Text>
-        {intl.formatMessage({
-        id: 'actions.occurrenceRecords.limited',
-        defaultMessage: 'Only the first {limit} taxa from this list will be used in the following Biocache search, due to querying limitations.'
-        }, { limit: maxTaxaSearch })}
-      </Text>
-    );
+    if (!hasFilters) {
+      handleBiocacheLink(meta.dataResourceUid);
+      return;
+    }
 
     scopeRef.current = 'filtered';
 
@@ -234,17 +248,9 @@ export function Actions({
           })}
         </Text>
       ),
-
-      children: (
-        <Stack gap='sm'>
-          {description}
-          {hasFilters && <ScopeChoice onChange={(scope) => (scopeRef.current = scope)} />}
-        </Stack>
-      ),
+      children: <ScopeChoice onChange={(scope) => (scopeRef.current = scope)} />,
       labels: {
-        confirm: hasFilters
-          ? intl.formatMessage({ id: 'actions.occurrenceRecords.viewRecords', defaultMessage: 'View records' })
-          : intl.formatMessage({ id: 'actions.occurrenceRecords.proceed', defaultMessage: 'View all records' }),
+        confirm: intl.formatMessage({ id: 'actions.occurrenceRecords.viewRecords', defaultMessage: 'View records' }),
         cancel: intl.formatMessage({ id: 'actions.cancel', defaultMessage: 'Cancel' })
       },
       confirmProps: {
@@ -255,7 +261,7 @@ export function Actions({
       onConfirm: () => {
         handleBiocacheLink(
           meta.dataResourceUid,
-          hasFilters && scopeRef.current === 'filtered' ? filters : undefined
+          scopeRef.current === 'filtered' ? filters : undefined
         );
       },
       centered: true
