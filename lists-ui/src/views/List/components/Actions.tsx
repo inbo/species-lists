@@ -110,11 +110,10 @@ export function Actions({
   const maxTaxaSearch = 2000; 
 
   // Authoritative Biocache link handler (moved before handleBiocacheLink)
-  // Unfiltered authoritative lists link with the species list id as an fq -
-  // biocache expands species_list:<id> server-side, so no QID is needed
+  // Unfiltered authoritative lists use the indexed species_list_uid field
   const handleAuthoritativeBiocacheLink = useCallback((dataResourceId: string) => {
     const url = import.meta.env.VITE_ALA_BIOCACHE_OCC_SEARCH;
-    window.open(`${url}?q=*:*&fq=species_list:${dataResourceId}`, '_blank');
+    window.open(`${url}?q=species_list_uid:${dataResourceId}`, '_blank');
   }, []);
 
   // Public list Biocache link handler

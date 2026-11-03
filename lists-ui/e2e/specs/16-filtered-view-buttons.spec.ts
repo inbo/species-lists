@@ -61,12 +61,11 @@ test.describe('16. Filtered view buttons (occurrence records / spatial portal)',
     await expect(scopeRadios(page)).toHaveCount(0);
     await confirmButton(page).click();
 
-    // No QID is needed for an authoritative public list - species list id fq search
+    // No QID is needed for an authoritative public list - indexed species_list_uid search
     await expect.poll(() => qidRequests.length, { timeout: 10_000 }).toBe(0);
     await expect.poll(openedUrls).toHaveLength(1);
     const urls = await openedUrls();
-    expect(urls[0]).toContain('q=*:*');
-    expect(urls[0]).toContain('fq=species_list:dr1001');
+    expect(urls[0]).toContain('q=species_list_uid:dr1001');
   });
 
   test('occurrence records modal offers a scope choice when filters are active', async ({ page }) => {
@@ -97,7 +96,7 @@ test.describe('16. Filtered view buttons (occurrence records / spatial portal)',
     await confirmButton(page).click();
 
     await expect.poll(openedUrls).toHaveLength(2);
-    expect((await openedUrls())[1]).toContain('fq=species_list:dr1001');
+    expect((await openedUrls())[1]).toContain('q=species_list_uid:dr1001');
     expect(qidRequests.length).toBe(1);
   });
 
